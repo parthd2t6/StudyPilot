@@ -1534,4 +1534,4 @@ with app.app_context():
 if __name__ == "__main__":
     if not app.config["JWT_SECRET_KEY"]:
         raise RuntimeError("Set JWT_SECRET_KEY in your .env file.")
-    app.run(host="https://studypilottt.netlify.app/", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
