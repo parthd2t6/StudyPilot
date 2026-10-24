@@ -35,11 +35,11 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=12)
 
-frontend_url = os.getenv("FRONTEND_URL", "http://127.0.0.1:5500")
+frontend_url = os.getenv("FRONTEND_URL", "https://studypilottt.netlify.app/")
 allowed_origins = list(set([
     frontend_url,
-    "http://localhost:5500",
-    "http://127.0.0.1:5500",
+    "https://studypilottt.netlify.app/",
+    "https://studypilottt.netlify.app/",
 ]))
 
 CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
@@ -1524,4 +1524,4 @@ with app.app_context():
 if __name__ == "__main__":
     if not app.config["JWT_SECRET_KEY"]:
         raise RuntimeError("Set JWT_SECRET_KEY in your .env file.")
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(host="https://studypilottt.netlify.app/", port=5000, debug=True)

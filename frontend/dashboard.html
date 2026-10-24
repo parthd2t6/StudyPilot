@@ -668,7 +668,7 @@ if (upcomingDeadlinesLabel) {
 
           try {
             const response = await fetch(
-              "http://127.0.0.1:5000/api/assignments/"
+              "https://studypilot-u8j4.onrender.com/api/assignments/"
                 + encodeURIComponent(assignment.id),
               {
                 method: "PATCH",
@@ -1150,7 +1150,7 @@ if (upcomingDeadlinesLabel) {
             throw new Error("Login token is missing. Please log in again.");
           }
 
-          const response = await fetch("http://127.0.0.1:5000/api/subjects", {
+          const response = await fetch("https://studypilot-u8j4.onrender.com/api/subjects", {
             headers: {
               "Authorization": "Bearer " + token
             }
@@ -1190,7 +1190,7 @@ if (upcomingDeadlinesLabel) {
             throw new Error("Your login session is missing. Please log in again.");
           }
 
-          const response = await fetch("http://127.0.0.1:5000/api/assignments", {
+          const response = await fetch("https://studypilot-u8j4.onrender.com/api/assignments", {
             headers: { "Authorization": "Bearer " + token }
           });
 
@@ -1256,7 +1256,7 @@ async function loadNextExam() {
       throw new Error("Login token is missing");
     }
 
-    const response = await fetch("http://127.0.0.1:5000/api/events", {
+    const response = await fetch("https://studypilot-u8j4.onrender.com/api/events", {
       headers: {
         "Authorization": "Bearer " + token
       }

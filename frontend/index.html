@@ -58,7 +58,7 @@
           const isValidEmail=email=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
           const clearFieldError=(input,error)=>{input.classList.remove('has-error');error.classList.remove('visible');};
           emailInput.addEventListener('input',()=>clearFieldError(emailInput,emailError));passwordInput.addEventListener('input',()=>clearFieldError(passwordInput,passwordError));
-          const API_BASE_URL='http://127.0.0.1:5000';
+          const API_BASE_URL='https://studypilot-u8j4.onrender.com';
           loginForm.addEventListener('submit',async event=>{
             event.preventDefault();formAlert.className='form-alert';formAlert.textContent='';const email=emailInput.value.trim(),password=passwordInput.value;let valid=true;
             if(!email){emailInput.classList.add('has-error');emailError.querySelector('span').textContent='Email address is required.';emailError.classList.add('visible');valid=false;}else if(!isValidEmail(email)){emailInput.classList.add('has-error');emailError.querySelector('span').textContent='Please enter a valid email address.';emailError.classList.add('visible');valid=false;}else clearFieldError(emailInput,emailError);
@@ -69,7 +69,7 @@
               if(!response.ok)throw new Error(data.error||data.message||'Invalid email or password. Please try again.');if(!data.access_token)throw new Error('The server did not return an access token. Please check the backend response.');
               sessionStorage.removeItem('studypilot_access_token');localStorage.removeItem('studypilot_access_token');sessionStorage.removeItem('studypilot_user');localStorage.removeItem('studypilot_user');const storage=document.getElementById('rememberMe').checked?localStorage:sessionStorage;storage.setItem('studypilot_access_token',data.access_token);if(data.user)storage.setItem('studypilot_user',JSON.stringify(data.user));
               formAlert.className='form-alert success';formAlert.textContent='Login successful! Opening your dashboard...';window.location.assign('dashboard.html');
-            }catch(error){formAlert.className='form-alert error';formAlert.textContent=error instanceof TypeError?'Could not connect to StudyPilot. Make sure the Flask backend is running at http://127.0.0.1:5000.':error.message;}finally{btnSpinner.style.display='none';btnText.textContent='Sign in';submitBtn.disabled=false;}
+            }catch(error){formAlert.className='form-alert error';formAlert.textContent=error instanceof TypeError?'Could not connect to StudyPilot. Make sure the Flask backend is running at https://studypilot-u8j4.onrender.com':error.message;}finally{btnSpinner.style.display='none';btnText.textContent='Sign in';submitBtn.disabled=false;}
           });
         });
       </script>

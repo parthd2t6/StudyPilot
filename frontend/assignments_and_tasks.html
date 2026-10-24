@@ -44,7 +44,7 @@
 <div id="deleteModal" class="fixed inset-0 z-40 hidden items-center justify-center bg-slate-950/40 p-4"><div class="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-2xl"><span class="material-symbols-outlined text-4xl text-red-600">delete_forever</span><h3 class="mt-3 text-xl font-semibold">Delete Assignment?</h3><p class="mt-2 text-sm text-slate-600">This action cannot be undone.</p><input id="deleteAssignmentId" type="hidden"><div class="mt-6 flex gap-3"><button id="cancelDeleteBtn" class="flex-1 rounded-xl border px-4 py-2">Cancel</button><button id="confirmDeleteBtn" class="flex-1 rounded-xl bg-red-600 px-4 py-2 font-semibold text-white">Delete</button></div></div></div>
 <script>
 (() => {
-  const API_BASE = 'http://127.0.0.1:5000';
+  const API_BASE = 'https://studypilot-u8j4.onrender.com';
   let assignments = [], currentFilter = 'all', subjects = [], toastTimer;
   const $ = id => document.getElementById(id);
   const getAuthToken = () => localStorage.getItem('studypilot_access_token') || sessionStorage.getItem('studypilot_access_token') || localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
