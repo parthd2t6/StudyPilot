@@ -35,14 +35,24 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=12)
 
-frontend_url = os.getenv("FRONTEND_URL", "https://studypilottt.netlify.app/")
-allowed_origins = list(set([
-    frontend_url,
-    "https://studypilottt.netlify.app/",
-    "https://studypilottt.netlify.app/",
-]))
 
-CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
+frontend_url = os.getenv(
+    "FRONTEND_URL",
+    "https://studypilottt.netlify.app"
+).rstrip("/")
+
+allowed_origins = [
+    frontend_url,
+    "https://studypilottt.netlify.app",
+]
+
+CORS(
+    app,
+    resources={r"/api/*": {"origins": allowed_origins}},
+    allow_headers=["Content-Type", "Authorization"],
+    methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+)
+
 
 db = SQLAlchemy()
 bcrypt = Bcrypt(app)
