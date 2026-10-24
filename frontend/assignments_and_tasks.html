@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyPilot — Assignments & Tasks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>body{font-family:Inter,sans-serif}.hidden{display:none!important}</style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+<header class="sticky top-0 z-20 border-b bg-white/95 backdrop-blur"><div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+<a href="dashboard.html" class="flex items-center gap-3 font-bold text-xl text-indigo-700"><span class="material-symbols-outlined">menu_book</span>StudyPilot</a>
+<a href="dashboard.html" class="rounded-lg border px-4 py-2 text-sm hover:bg-slate-50">← Back to Dashboard</a></div></header>
+<main class="mx-auto max-w-6xl px-4 py-8">
+<div class="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white p-4 shadow-sm"><div class="flex items-center gap-2"><span id="connectionDot" class="h-2.5 w-2.5 rounded-full bg-amber-500"></span><span id="connectionText" class="text-sm text-slate-600">Connecting to backend…</span></div><span id="syncStatus" class="text-xs text-slate-500">Not synced yet</span></div>
+<div class="mb-7"><p class="mb-2 inline-flex rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-800">Academic Tasks</p><h1 class="text-3xl font-bold tracking-tight">Assignments &amp; Tasks</h1><p class="mt-2 max-w-2xl text-slate-600">Keep track of coursework, deadlines, and academic priorities in one place.</p></div>
+<section class="mb-7 grid gap-4 sm:grid-cols-3">
+<div class="rounded-2xl bg-white p-6 shadow-sm"><p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Total Tasks</p><p id="kpiTotalTasks" class="mt-2 text-4xl font-bold">0</p></div>
+<div class="rounded-2xl bg-white p-6 shadow-sm"><p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Pending / In Progress</p><p id="kpiPendingTasks" class="mt-2 text-4xl font-bold text-amber-600">0</p></div>
+<div class="rounded-2xl bg-white p-6 shadow-sm"><p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Completed</p><p id="kpiCompletedTasks" class="mt-2 text-4xl font-bold text-indigo-700">0</p></div></section>
+<section class="mb-8 rounded-2xl bg-white p-6 shadow-sm"><h2 class="mb-5 text-xl font-semibold">Add New Assignment</h2>
+<form id="addAssignmentForm" class="grid gap-4 md:grid-cols-12 md:items-end">
+<div class="md:col-span-5"><label for="assignmentTitleInput" class="mb-1 block text-sm font-medium">Assignment title *</label><input id="assignmentTitleInput" required maxlength="200" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" placeholder="e.g. Problem Set 4"></div>
+<div class="md:col-span-3"><label for="subjectSelect" class="mb-1 block text-sm font-medium">Subject *</label><select id="subjectSelect" required class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5"><option value="">Loading subjects…</option></select></div>
+<div class="md:col-span-2"><label for="dueAtInput" class="mb-1 block text-sm font-medium">Due date &amp; time</label><input id="dueAtInput" type="datetime-local" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5"></div>
+<div class="md:col-span-2"><button id="addButton" class="w-full rounded-xl bg-indigo-700 px-4 py-2.5 font-semibold text-white hover:bg-indigo-800 disabled:opacity-50">+ Add Task</button></div></form></section>
+<section><div class="mb-4 flex flex-wrap items-center justify-between gap-3"><div class="flex items-center gap-2"><h2 class="text-xl font-semibold">My Assignments</h2><span id="tasksSubtext" class="rounded-md bg-slate-200 px-2 py-1 text-xs text-slate-600">Showing active items</span></div>
+<div class="flex gap-1 rounded-xl bg-slate-200 p-1"><button class="filter-pill rounded-lg bg-white px-3 py-2 text-sm font-semibold shadow-sm" data-filter="all">My Tasks <span id="filterCountAll">0</span></button><button class="filter-pill rounded-lg px-3 py-2 text-sm" data-filter="pending">Pending <span id="filterCountPending">0</span></button><button class="filter-pill rounded-lg px-3 py-2 text-sm" data-filter="completed">Completed <span id="filterCountCompleted">0</span></button></div></div>
+<div id="errorBox" class="mb-4 hidden rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"></div><div id="assignmentsListContainer" class="space-y-3"></div>
+<div id="emptyState" class="hidden rounded-2xl bg-white p-12 text-center shadow-sm"><span class="material-symbols-outlined text-4xl text-slate-400">checklist</span><h3 class="mt-3 font-semibold">No assignments found</h3><p class="mt-1 text-sm text-slate-500">Add an assignment above or choose another filter.</p></div></section></main>
+<div id="toastNotification" role="status" class="fixed bottom-5 right-5 z-50 hidden max-w-sm rounded-xl bg-slate-900 px-5 py-3 text-sm text-white shadow-xl"></div>
+<div id="editModal" class="fixed inset-0 z-40 hidden items-center justify-center bg-slate-950/40 p-4"><div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
+<div class="mb-5 flex items-center justify-between"><h3 class="text-xl font-semibold">Edit Assignment</h3><button id="closeEditModalBtn" type="button" class="rounded-lg px-3 py-1 text-xl hover:bg-slate-100">×</button></div>
+<form id="editAssignmentForm" class="space-y-4"><input id="editAssignmentId" type="hidden">
+<div><label for="editTitleInput" class="mb-1 block text-sm font-medium">Title *</label><input id="editTitleInput" required maxlength="200" class="w-full rounded-xl border px-3 py-2.5"></div>
+<div class="grid gap-4 sm:grid-cols-2"><div><label for="editSubjectSelect" class="mb-1 block text-sm font-medium">Subject *</label><select id="editSubjectSelect" required class="w-full rounded-xl border px-3 py-2.5"></select></div>
+<div><label for="editStatusSelect" class="mb-1 block text-sm font-medium">Status</label><select id="editStatusSelect" class="w-full rounded-xl border px-3 py-2.5"><option value="pending">Pending</option><option value="in_progress">In Progress</option><option value="completed">Completed</option></select></div></div>
+<div><label for="editDueAtInput" class="mb-1 block text-sm font-medium">Due date &amp; time</label><input id="editDueAtInput" type="datetime-local" class="w-full rounded-xl border px-3 py-2.5"></div>
+<div class="flex justify-end gap-2"><button id="cancelEditBtn" type="button" class="rounded-xl border px-4 py-2">Cancel</button><button class="rounded-xl bg-indigo-700 px-4 py-2 font-semibold text-white">Save Changes</button></div></form></div></div>
+<div id="deleteModal" class="fixed inset-0 z-40 hidden items-center justify-center bg-slate-950/40 p-4"><div class="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-2xl"><span class="material-symbols-outlined text-4xl text-red-600">delete_forever</span><h3 class="mt-3 text-xl font-semibold">Delete Assignment?</h3><p class="mt-2 text-sm text-slate-600">This action cannot be undone.</p><input id="deleteAssignmentId" type="hidden"><div class="mt-6 flex gap-3"><button id="cancelDeleteBtn" class="flex-1 rounded-xl border px-4 py-2">Cancel</button><button id="confirmDeleteBtn" class="flex-1 rounded-xl bg-red-600 px-4 py-2 font-semibold text-white">Delete</button></div></div></div>
+<script>
+(() => {
+  const API_BASE = 'http://127.0.0.1:5000';
+  let assignments = [], currentFilter = 'all', subjects = [], toastTimer;
+  const $ = id => document.getElementById(id);
+  const getAuthToken = () => localStorage.getItem('studypilot_access_token') || sessionStorage.getItem('studypilot_access_token') || localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+  function authHeaders(json=false) { const h={}; if(json) h['Content-Type']='application/json'; const token=getAuthToken(); if(token) h.Authorization=`Bearer ${token}`; return h; }
+  async function apiRequest(path, options={}) {
+    const response=await fetch(`${API_BASE}${path}`,{...options,headers:{...authHeaders(Boolean(options.body)),...(options.headers||{})}});
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok) { if(response.status===401) throw new Error('Your session may have expired. Please log in again.'); throw new Error(data.error||data.message||`Request failed (${response.status})`); }
+    return data;
+  }
+  function showToast(message,isError=false) { const t=$('toastNotification'); t.textContent=message; t.className=`fixed bottom-5 right-5 z-50 max-w-sm rounded-xl px-5 py-3 text-sm text-white shadow-xl ${isError?'bg-red-700':'bg-slate-900'}`; clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.add('hidden'),3200); }
+  function showError(message) { $('errorBox').textContent=message; $('errorBox').classList.remove('hidden'); }
+  function clearError() { $('errorBox').textContent=''; $('errorBox').classList.add('hidden'); }
+  function escapeHTML(value) { return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+  function isCompleted(task) { return task.status==='completed'||task.completed===true; }
+  function formatDue(value) { if(!value)return 'No deadline set'; const d=new Date(value); if(Number.isNaN(d.getTime()))return 'Invalid date'; return d.toLocaleString([],{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}); }
+  function dueBadge(task) { if(!task.due_at||isCompleted(task))return ''; const d=new Date(task.due_at); if(Number.isNaN(d.getTime()))return ''; if(d<new Date())return '<span class="rounded-full bg-red-100 px-2 py-1 text-xs font-semibold text-red-700">Overdue</span>'; if(d-Date.now()<86400000)return '<span class="rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-800">Due soon</span>'; return ''; }
+  function updateSummaryCards() {
+    const completed=assignments.filter(isCompleted).length, pending=assignments.length-completed;
+    $('kpiTotalTasks').textContent=assignments.length; $('kpiPendingTasks').textContent=pending; $('kpiCompletedTasks').textContent=completed;
+    $('filterCountAll').textContent=pending; $('filterCountPending').textContent=pending; $('filterCountCompleted').textContent=completed;
+  }
+  function setActiveFilterStyles() {
+    document.querySelectorAll('.filter-pill').forEach(b=>b.classList.remove('bg-white','font-semibold','shadow-sm'));
+    const active=document.querySelector(`.filter-pill[data-filter="${currentFilter}"]`);
+    if(active)active.classList.add('bg-white','font-semibold','shadow-sm');
+  }
+  function renderAssignments() {
+    const list=$('assignmentsListContainer');
+    // My Tasks/All and Pending never show completed tasks; Completed is their separate view.
+    const filtered=currentFilter==='completed' ? assignments.filter(isCompleted) : assignments.filter(t=>!isCompleted(t));
+    $('tasksSubtext').textContent=currentFilter==='completed'?'Showing completed items':currentFilter==='pending'?'Showing pending items':'Showing active items';
+    list.innerHTML=''; $('emptyState').classList.toggle('hidden',filtered.length>0);
+    filtered.forEach(task=>{
+      const completed=isCompleted(task), status=task.status||(completed?'completed':'pending');
+      const statusText=status==='in_progress'?'In Progress':status==='completed'?'Completed':'Pending';
+      const card=document.createElement('article');
+      card.className='flex flex-col gap-4 rounded-2xl bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between';
+      card.innerHTML=`<div class="flex min-w-0 items-start gap-3">
+        <button type="button" data-action="toggle" data-id="${escapeHTML(task.id)}" aria-label="${completed?'Move back to pending':'Mark completed'}" title="${completed?'Move back to pending':'Mark completed'}" class="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${completed?'border-indigo-700 bg-indigo-700 text-white':'border-slate-300 text-transparent hover:border-indigo-500'}">✓</button>
+        <div class="min-w-0"><h3 class="break-words font-semibold ${completed?'text-slate-400 line-through':''}">${escapeHTML(task.title)}</h3>
+        <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500"><span class="rounded-full bg-indigo-50 px-2.5 py-1 font-medium text-indigo-800">${escapeHTML(task.subject||'General')}</span><span>Due: ${escapeHTML(formatDue(task.due_at))}</span>${dueBadge(task)}<span class="rounded-full bg-slate-100 px-2.5 py-1">${statusText}</span></div></div></div>
+        <div class="flex shrink-0 justify-end gap-2"><button type="button" data-action="edit" data-id="${escapeHTML(task.id)}" class="rounded-lg border px-3 py-2 text-sm hover:bg-slate-50">Edit</button><button type="button" data-action="delete" data-id="${escapeHTML(task.id)}" class="rounded-lg border border-red-200 px-3 py-2 text-sm text-red-700 hover:bg-red-50">Delete</button></div>`;
+      list.appendChild(card);
+    });
+    updateSummaryCards(); setActiveFilterStyles();
+  }
+  async function loadSubjects() {
+    try { const data=await apiRequest('/api/subjects'); const rows=Array.isArray(data)?data:(data.subjects||[]); subjects=rows.map(x=>typeof x==='string'?{name:x}:x).filter(x=>x&&x.name); }
+    catch(e) { subjects=['Mathematics','Organic Chemistry','Computer Science','Physics'].map(name=>({name})); }
+    const options=subjects.map(s=>`<option value="${escapeHTML(s.name)}">${escapeHTML(s.name)}</option>`).join('');
+    $('subjectSelect').innerHTML='<option value="">Select subject…</option>'+options; $('editSubjectSelect').innerHTML=options;
+  }
+  async function fetchAssignments() {
+    $('connectionText').textContent='Connecting to backend…'; $('connectionDot').className='h-2.5 w-2.5 rounded-full bg-amber-500'; $('syncStatus').textContent='Loading assignments…'; clearError();
+    try {
+      const data=await apiRequest('/api/assignments'); assignments=Array.isArray(data)?data:(data.assignments||[]);
+      $('connectionText').textContent='Backend connected'; $('connectionDot').className='h-2.5 w-2.5 rounded-full bg-emerald-500'; $('syncStatus').textContent='Cloud synced';
+    } catch(error) {
+      assignments=[]; $('connectionText').textContent='Backend connection failed'; $('connectionDot').className='h-2.5 w-2.5 rounded-full bg-red-500'; $('syncStatus').textContent='Not synced';
+      showError(`${error.message} Check that Flask is running at ${API_BASE} and that you are logged in. No fake local data was loaded.`);
+    }
+    renderAssignments();
+  }
+  $('addAssignmentForm').addEventListener('submit',async event=>{
+    event.preventDefault(); clearError(); const title=$('assignmentTitleInput').value.trim(), subject=$('subjectSelect').value, rawDue=$('dueAtInput').value;
+    if(!title||!subject)return showToast('Enter a title and choose a subject.',true);
+    const payload={title,subject,due_at:rawDue?new Date(rawDue).toISOString():null,status:'pending'}, button=$('addButton'); button.disabled=true;
+    try {
+      const data=await apiRequest('/api/assignments',{method:'POST',body:JSON.stringify(payload)}), created=data.assignment||data;
+      if(created&&created.id!==undefined)assignments.unshift(created); else await fetchAssignments();
+      $('addAssignmentForm').reset(); currentFilter='all'; renderAssignments(); showToast('Assignment saved to your account.');
+    } catch(error) { showError(error.message); showToast('Could not save assignment.',true); }
+    finally { button.disabled=false; }
+  });
+  function openEdit(id) {
+    const task=assignments.find(x=>String(x.id)===String(id)); if(!task)return;
+    $('editAssignmentId').value=task.id; $('editTitleInput').value=task.title||''; $('editSubjectSelect').value=task.subject||(subjects[0]&&subjects[0].name)||'';
+    $('editStatusSelect').value=task.status||(isCompleted(task)?'completed':'pending');
+    if(task.due_at){const d=new Date(task.due_at);$('editDueAtInput').value=Number.isNaN(d.getTime())?'':new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);}else $('editDueAtInput').value='';
+    $('editModal').classList.remove('hidden'); $('editModal').classList.add('flex');
+  }
+  function closeEdit(){ $('editModal').classList.add('hidden'); $('editModal').classList.remove('flex'); }
+  function openDelete(id){ $('deleteAssignmentId').value=id; $('deleteModal').classList.remove('hidden'); $('deleteModal').classList.add('flex'); }
+  function closeDelete(){ $('deleteModal').classList.add('hidden'); $('deleteModal').classList.remove('flex'); }
+  $('assignmentsListContainer').addEventListener('click',async event=>{
+    const button=event.target.closest('button[data-action]'); if(!button)return;
+    const id=button.dataset.id, action=button.dataset.action, task=assignments.find(x=>String(x.id)===String(id)); if(!task)return;
+    if(action==='edit')return openEdit(id); if(action==='delete')return openDelete(id);
+    if(action==='toggle') {
+      const wasCompleted=isCompleted(task), status=wasCompleted?'pending':'completed';
+      if(!window.confirm(wasCompleted?`Move “${task.title}” back to Pending?`:`Have you completed “${task.title}”? It will be moved to Completed.`))return;
+      button.disabled=true;
+      try {
+        const data=await apiRequest(`/api/assignments/${encodeURIComponent(id)}`,{method:'PATCH',body:JSON.stringify({status})}), updated=data.assignment||data;
+        const index=assignments.findIndex(x=>String(x.id)===String(id));
+        if(index!==-1)assignments[index]=updated&&updated.id!==undefined?updated:{...task,status,completed:status==='completed'};
+        currentFilter=status==='completed'?'all':'pending'; renderAssignments();
+        showToast(status==='completed'?'Task completed and moved to Completed.':'Task moved back to Pending.');
+      } catch(error) { showError(error.message); showToast('Could not save the status. Your task was not moved.',true); }
+    }
+  });
+  $('editAssignmentForm').addEventListener('submit',async event=>{
+    event.preventDefault(); clearError(); const id=$('editAssignmentId').value, status=$('editStatusSelect').value, rawDue=$('editDueAtInput').value;
+    const payload={title:$('editTitleInput').value.trim(),subject:$('editSubjectSelect').value,status,due_at:rawDue?new Date(rawDue).toISOString():null};
+    try {
+      const data=await apiRequest(`/api/assignments/${encodeURIComponent(id)}`,{method:'PATCH',body:JSON.stringify(payload)}), updated=data.assignment||data;
+      const index=assignments.findIndex(x=>String(x.id)===String(id));
+      if(index!==-1)assignments[index]=updated&&updated.id!==undefined?updated:{...assignments[index],...payload};
+      closeEdit(); currentFilter=status==='completed'?'completed':'all'; renderAssignments(); showToast('Assignment updated.');
+    } catch(error) { showError(error.message); showToast('Could not update assignment.',true); }
+  });
+  $('confirmDeleteBtn').addEventListener('click',async()=>{
+    const id=$('deleteAssignmentId').value; if(!id)return;
+    try { await apiRequest(`/api/assignments/${encodeURIComponent(id)}`,{method:'DELETE'}); assignments=assignments.filter(x=>String(x.id)!==String(id)); closeDelete(); renderAssignments(); showToast('Assignment deleted.'); }
+    catch(error) { showError(error.message); showToast('Could not delete assignment.',true); }
+  });
+  $('closeEditModalBtn').addEventListener('click',closeEdit); $('cancelEditBtn').addEventListener('click',closeEdit); $('cancelDeleteBtn').addEventListener('click',closeDelete);
+  $('editModal').addEventListener('click',event=>{if(event.target===$('editModal'))closeEdit();});
+  $('deleteModal').addEventListener('click',event=>{if(event.target===$('deleteModal'))closeDelete();});
+  document.querySelectorAll('.filter-pill').forEach(button=>button.addEventListener('click',()=>{currentFilter=button.dataset.filter;renderAssignments();}));
+  async function init(){await loadSubjects();await fetchAssignments();}
+  init();
+})();
+</script>
+</body>
+</html>

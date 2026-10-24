@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-error-container": "#93000a", "surface": "#f8f9ff", "tertiary-fixed": "#ffdbcd", "tertiary-fixed-dim": "#ffb597", "on-background": "#0b1c30", "on-secondary": "#ffffff", "surface-dim": "#cbdbf5", "error": "#ba1a1a", "surface-container-high": "#dce9ff", "on-primary-fixed": "#100069", "on-tertiary-container": "#ffb393", "on-surface-variant": "#464554", "surface-variant": "#d3e4fe", "inverse-on-surface": "#eaf1ff", "secondary-fixed": "#eaddff", "outline": "#777586", "surface-bright": "#f8f9ff", "primary": "#2a14b4", "tertiary": "#692400", "on-primary": "#ffffff", "on-secondary-container": "#fffbff", "secondary-fixed-dim": "#d2bbff", "on-tertiary": "#ffffff", "tertiary-container": "#8f3400", "background": "#f8f9ff", "secondary-container": "#8a4cfc", "on-primary-container": "#c1beff", "on-primary-fixed-variant": "#372abf", "inverse-primary": "#c3c0ff", "surface-container-low": "#eff4ff", "primary-container": "#4338ca", "error-container": "#ffdad6", "on-error": "#ffffff", "primary-fixed": "#e3dfff", "surface-container-highest": "#d3e4fe", "secondary": "#712ae2", "surface-container": "#e5eeff", "on-secondary-fixed": "#25005a", "outline-variant": "#c7c4d7", "on-surface": "#0b1c30", "surface-container-lowest": "#ffffff", "on-tertiary-fixed": "#360f00", "primary-fixed-dim": "#c3c0ff", "inverse-surface": "#213145", "surface-tint": "#5148d7", "on-secondary-fixed-variant": "#5a00c6", "on-tertiary-fixed-variant": "#7d2d00" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin-mobile": "1rem", "space-xs": "0.25rem", "space-xl": "2.5rem", "gutter-mobile": "1rem", "space-sm": "0.5rem", "space-md": "1rem", "gutter": "1.5rem", "margin": "2rem", "space-lg": "1.5rem" }, "fontFamily": { "label-md": ["Inter"], "label-lg": ["Inter"], "body-sm": ["Inter"], "display-mobile": ["Inter"], "body-lg": ["Inter"], "display": ["Inter"], "body-md": ["Inter"], "headline-lg-mobile": ["Inter"], "headline-lg": ["Inter"], "headline-md": ["Inter"], "headline-sm": ["Inter"], "label-sm": ["Inter"] }, "fontSize": { "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400" }], "display-mobile": ["30px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }], "display": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.025em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "500" }] } } } };</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface-container-lowest/95 backdrop-blur-md border-b border-secondary-fixed shadow-[0_1px_8px_rgba(67,56,202,0.04)]"><div class="h-16 w-full max-w-7xl mx-auto px-gutter flex items-center justify-between"><a class="flex items-center gap-space-sm group focus:outline-none" href="dashboard.html"><div class="w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center text-on-primary shadow-sm transition-transform group-hover:scale-105"><span class="material-symbols-outlined text-[20px]">menu_book</span></div><span class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">StudyPilot</span></a><div class="flex items-center gap-space-md"><nav class="flex items-center" data-active-classes="bg-surface-container-low text-primary-container font-label-lg text-label-lg rounded-xl"><a class="inline-flex items-center px-space-md py-space-sm rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" data-path="dashboard" href="dashboard.html">← Back to Dashboard</a></nav><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 min-h-screen bg-surface"><div class="flex flex-col w-full">
+<div class="w-full max-w-7xl mx-auto px-gutter py-space-lg flex flex-col gap-space-lg">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="flex flex-col items-start gap-1">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-label-sm bg-secondary-fixed text-primary tracking-wide uppercase font-semibold">
+<span class="material-symbols-outlined text-[14px]">event_note</span>
+          Academic Calendar
+        </span>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mt-1">Calendar & Exams</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">
+          Manage your exam schedule, assignment deadlines, and critical milestones in one coordinated view.
+        </p>
+</div>
+<div class="flex items-center gap-3">
+<button class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg shadow-sm hover:opacity-95 active:scale-[0.98] transition-all" id="open-add-modal-btn">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Add Event</span>
+</button>
+</div>
+</div>
+<!-- Main Two-Column Content Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Left Column: Interactive Monthly Calendar Card (approx 65%) -->
+<div class="lg:col-span-8 flex flex-col gap-space-md">
+<div class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-lg shadow-sm flex flex-col gap-space-md">
+<!-- Month Controls & Switcher -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pb-2">
+<div class="flex items-center gap-3">
+<h2 class="font-headline-md text-headline-md text-on-surface tracking-tight" id="calendar-month-year"></h2>
+<button class="px-3 py-1 rounded-lg bg-surface-container-low text-primary-container font-label-md text-label-md hover:bg-surface-container transition-colors" id="today-btn">
+                Today
+              </button>
+</div>
+<div class="flex items-center gap-1.5">
+<button aria-label="Previous Month" class="w-9 h-9 rounded-xl flex items-center justify-center bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors" id="prev-month-btn">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button aria-label="Next Month" class="w-9 h-9 rounded-xl flex items-center justify-center bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors" id="next-month-btn">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Calendar Legend -->
+<div class="flex flex-wrap items-center gap-4 py-1 text-label-sm font-label-sm text-on-surface-variant">
+<span class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+              Exam
+            </span>
+<span class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary-container"></span>
+              Assignment Deadline
+            </span>
+<span class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-outline"></span>
+              Academic Event
+            </span>
+</div>
+<!-- Weekday Headers -->
+<div class="grid grid-cols-7 gap-1.5 text-center">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider py-1">Mon</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider py-1">Tue</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider py-1">Wed</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider py-1">Thu</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider py-1">Fri</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider py-1 text-primary">Sat</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider py-1 text-primary">Sun</span>
+</div>
+<!-- Calendar Days Grid -->
+<div class="grid grid-cols-7 gap-1.5 sm:gap-2" id="calendar-grid">
+<!-- Dynamically populated by JavaScript -->
+</div>
+</div>
+<!-- Productivity Summary Banner -->
+<div class="bg-surface-container-low rounded-2xl p-space-md flex items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary-container flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">verified</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg text-on-surface truncate">Preparation Buffer</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">All registered exam dates maintain automated study milestones.</span>
+</div>
+</div>
+<span class="flex-shrink-0 px-3 py-1 rounded-full bg-surface-container-lowest font-label-sm text-label-sm text-primary font-semibold" id="active-events-count-pill">
+            4 Registered
+          </span>
+</div>
+</div>
+<!-- Right Column: Selected Day Detail + Upcoming Exams Card (approx 35%) -->
+<div class="lg:col-span-4 flex flex-col gap-space-lg">
+<!-- Selected Date Events Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between gap-2 pb-2">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Schedule For</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface" id="selected-date-heading"></h3>
+</div>
+<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container-low text-primary-container font-semibold" id="selected-date-count">
+              0 events
+            </span>
+</div>
+<!-- Dynamic Events Container -->
+<div class="flex flex-col gap-2.5" id="selected-events-list">
+<!-- Rendered via JS -->
+</div>
+</div>
+<!-- Upcoming High-Stakes Exams Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[20px]">timer</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Upcoming Exams</h3>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Next 30 Days</span>
+</div>
+<div class="flex flex-col gap-3" id="upcoming-exams-list">
+<!-- Populated via JS -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Add / Edit Event Modal -->
+<div class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" id="event-modal">
+<!-- Backdrop Scrim -->
+<div class="fixed inset-0 bg-on-surface/40 backdrop-blur-sm transition-opacity" id="modal-backdrop"></div>
+<!-- Modal Dialog Surface -->
+<div class="relative w-full max-w-lg bg-surface-container-lowest rounded-2xl shadow-xl overflow-hidden z-10 flex flex-col max-h-[90vh]">
+<!-- Modal Header -->
+<div class="px-space-lg pt-space-lg pb-space-sm flex items-center justify-between">
+<div class="flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface" id="modal-title">Add New Event</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Fill in the details for your upcoming academic schedule.</p>
+</div>
+<button aria-label="Close dialog" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" id="close-modal-btn">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Form Body -->
+<form class="px-space-lg py-space-sm flex flex-col gap-space-md overflow-y-auto" id="event-form">
+<input id="event-id" type="hidden" value=""/>
+<!-- Title Input -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="event-title">
+            Event Title <span class="text-error">*</span>
+</label>
+<input class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none transition-all placeholder:text-on-surface-variant/60" id="event-title" placeholder="e.g. Linear Algebra Final Exam" required="" type="text"/>
+<span class="hidden text-error font-body-sm text-body-sm" id="title-error">Title is required.</span>
+</div>
+<!-- Event Type Segmented Buttons -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface">Event Type</label>
+<div class="grid grid-cols-3 gap-2 p-1 rounded-xl bg-surface-container-low">
+<button class="event-type-btn py-1.5 px-2 rounded-lg font-label-md text-label-md transition-all text-center flex items-center justify-center gap-1.5 bg-surface-container-lowest text-primary shadow-sm font-semibold" data-type="Exam" type="button">
+<span class="material-symbols-outlined text-[16px]">school</span>
+              Exam
+            </button>
+<button class="event-type-btn py-1.5 px-2 rounded-lg font-label-md text-label-md transition-all text-center flex items-center justify-center gap-1.5 text-on-surface-variant hover:text-on-surface" data-type="Assignment Deadline" type="button">
+<span class="material-symbols-outlined text-[16px]">assignment</span>
+              Deadline
+            </button>
+<button class="event-type-btn py-1.5 px-2 rounded-lg font-label-md text-label-md transition-all text-center flex items-center justify-center gap-1.5 text-on-surface-variant hover:text-on-surface" data-type="Other" type="button">
+<span class="material-symbols-outlined text-[16px]">event</span>
+              Other
+            </button>
+</div>
+<input id="event-type" type="hidden" value="Exam"/>
+</div>
+<!-- Subject Input -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="event-subject">Course / Subject</label>
+<input class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none transition-all placeholder:text-on-surface-variant/60" id="event-subject" list="subject-suggestions" placeholder="e.g. Mathematics, Organic Chemistry" type="text"/>
+<datalist id="subject-suggestions">
+<option value="Mathematics"></option>
+<option value="Organic Chemistry"></option>
+<option value="Computer Science"></option>
+<option value="Physics"></option>
+<option value="Biochemistry"></option>
+</datalist>
+</div>
+<!-- Date & Times Row -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+<div class="flex flex-col gap-1.5 sm:col-span-1">
+<label class="font-label-md text-label-md text-on-surface" for="event-date">
+              Date <span class="text-error">*</span>
+</label>
+<input class="w-full px-3 py-2.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none transition-all" id="event-date" required="" type="date"/>
+</div>
+<div class="flex flex-col gap-1.5 sm:col-span-1">
+<label class="font-label-md text-label-md text-on-surface" for="event-start-time">Start Time</label>
+<input class="w-full px-3 py-2.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none transition-all" id="event-start-time" type="time"/>
+</div>
+<div class="flex flex-col gap-1.5 sm:col-span-1">
+<label class="font-label-md text-label-md text-on-surface" for="event-end-time">End Time</label>
+<input class="w-full px-3 py-2.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none transition-all" id="event-end-time" type="time"/>
+</div>
+</div>
+<!-- Location / Notes -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="event-location">Location / Room or Notes</label>
+<input class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none transition-all placeholder:text-on-surface-variant/60" id="event-location" placeholder="e.g. Hall B4, Bring scientific calculator" type="text"/>
+</div>
+<!-- Footer Action Buttons -->
+<div class="pt-space-md pb-space-lg flex items-center justify-end gap-3">
+<button class="px-4 py-2.5 rounded-xl text-on-surface font-label-lg text-label-lg hover:bg-surface-container-low transition-colors" id="cancel-modal-btn" type="button">
+            Cancel
+          </button>
+<button class="px-5 py-2.5 rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg shadow-sm hover:opacity-95 active:scale-[0.98] transition-all" id="save-event-btn" type="submit">
+            Save Event
+          </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<script>
+(function() {
+  // Master Event Model ready for Flask API endpoint synchronizations
+  // Endpoints: GET /api/events, POST /api/events, PATCH /api/events/:id, DELETE /api/events/:id
+  function getToday() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return today;
+}
+
+const currentYear = getToday().getFullYear();
+const currentMonth = getToday().getMonth();
+
+  // Helper to format Date string to YYYY-MM-DD
+  function toDateKey(year, month, day) {
+    const mm = String(month + 1).padStart(2, '0');
+    const dd = String(day).padStart(2, '0');
+    return `${year}-${mm}-${dd}`;
+  }
+
+  // Events are loaded from the authenticated Flask API.
+  let events = [];
+  const API_BASE_URL = 'http://127.0.0.1:5000';
+
+  function getAccessToken() {
+    // Check common localStorage and sessionStorage keys used by login pages.
+    const keys = [
+      'studypilot_access_token',
+      'access_token',
+      'token',
+      'studyPilotToken',
+      'studypilot_token',
+      'jwt',
+      'jwt_token'
+    ];
+
+    for (const storage of [localStorage, sessionStorage]) {
+      for (const key of keys) {
+        const value = storage.getItem(key);
+        if (value && value.trim()) return value.trim();
+      }
+    }
+    return null;
+  }
+
+  async function apiRequest(path, options = {}) {
+    const token = getAccessToken();
+    if (!token) throw new Error('You are not signed in. Please log in, then reopen the calendar.');
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        ...(options.headers || {})
+      }
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(payload.error || `Request failed (${response.status})`);
+    return payload;
+  }
+
+  function normalizeEvent(item) {
+    return {
+      id: String(item.id), title: item.title, type: item.type || 'Other',
+      subject: item.subject || '', date: item.date,
+      startTime: item.start_time || '', endTime: item.end_time || '',
+      location: item.location || ''
+    };
+  }
+
+  async function loadEvents() {
+    try {
+      const data = await apiRequest('/api/events');
+      events = (data.events || []).map(normalizeEvent);
+      renderCalendar();
+    } catch (error) {
+      renderCalendar();
+      alert(`Could not load calendar events: ${error.message}`);
+    }
+  }
+
+
+  // Viewport Calendar State
+  let viewDate = new Date();
+  let selectedDateStr = toDateKey(viewDate.getFullYear(), viewDate.getMonth(), viewDate.getDate());
+
+  // Element Selectors
+  const calendarGrid = document.getElementById('calendar-grid');
+  const monthYearLabel = document.getElementById('calendar-month-year');
+  const prevMonthBtn = document.getElementById('prev-month-btn');
+  const nextMonthBtn = document.getElementById('next-month-btn');
+  const todayBtn = document.getElementById('today-btn');
+  const selectedDateHeading = document.getElementById('selected-date-heading');
+  const selectedDateCount = document.getElementById('selected-date-count');
+  const selectedEventsList = document.getElementById('selected-events-list');
+  const upcomingExamsList = document.getElementById('upcoming-exams-list');
+  const activeEventsCountPill = document.getElementById('active-events-count-pill');
+
+  // Modal Selectors
+  const eventModal = document.getElementById('event-modal');
+  const modalBackdrop = document.getElementById('modal-backdrop');
+  const openAddModalBtn = document.getElementById('open-add-modal-btn');
+  const closeModalBtn = document.getElementById('close-modal-btn');
+  const cancelModalBtn = document.getElementById('cancel-modal-btn');
+  const eventForm = document.getElementById('event-form');
+  const modalTitle = document.getElementById('modal-title');
+  const eventIdInput = document.getElementById('event-id');
+  const eventTitleInput = document.getElementById('event-title');
+  const eventTypeInput = document.getElementById('event-type');
+  const eventSubjectInput = document.getElementById('event-subject');
+  const eventDateInput = document.getElementById('event-date');
+  const eventStartTimeInput = document.getElementById('event-start-time');
+  const eventEndTimeInput = document.getElementById('event-end-time');
+  const eventLocationInput = document.getElementById('event-location');
+  const titleError = document.getElementById('title-error');
+  const eventTypeBtns = document.querySelectorAll('.event-type-btn');
+
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  function formatTimeDisplay(timeStr) {
+    if (!timeStr) return "";
+    const [h, m] = timeStr.split(':');
+    let hours = parseInt(h, 10);
+    const suffix = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12;
+    return `${hours}:${m} ${suffix}`;
+  }
+
+  function formatPrettyDate(dateStr) {
+    if (!dateStr) return "";
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const dateObj = new Date(y, m - 1, d);
+    return dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function updateOverviewCounts() {
+    activeEventsCountPill.textContent = `${events.length} Registered`;
+  }
+
+  // Render Calendar Grid
+  function renderCalendar() {
+    const year = viewDate.getFullYear();
+    const month = viewDate.getMonth();
+
+    monthYearLabel.textContent = `${monthNames[month]} ${year}`;
+
+    // Clear grid
+    calendarGrid.innerHTML = '';
+
+    // Days in current & previous month
+    const firstDayIndex = new Date(year, month, 1).getDay(); // 0 is Sun, 1 is Mon
+    // Shift so Mon is 0, Sun is 6
+    const adjustedFirstDay = (firstDayIndex + 6) % 7;
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+    const today = getToday();
+const todayStr = toDateKey(
+  today.getFullYear(),
+  today.getMonth(),
+  today.getDate()
+);
+
+    // 1. Previous Month Leading Days
+    for (let i = adjustedFirstDay - 1; i >= 0; i--) {
+      const dayNum = daysInPrevMonth - i;
+      const prevDateKey = toDateKey(month === 0 ? year - 1 : year, month === 0 ? 11 : month - 1, dayNum);
+      const cell = createDayCell(dayNum, prevDateKey, true);
+      calendarGrid.appendChild(cell);
+    }
+
+    // 2. Current Month Days
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateKey = toDateKey(year, month, day);
+      const cell = createDayCell(day, dateKey, false, dateKey === todayStr);
+      calendarGrid.appendChild(cell);
+    }
+
+    // 3. Next Month Trailing Days to complete 35 or 42 grid slots
+    const totalFilled = adjustedFirstDay + daysInMonth;
+    const remainingSlots = (totalFilled > 35 ? 42 : 35) - totalFilled;
+    for (let day = 1; day <= remainingSlots; day++) {
+      const nextDateKey = toDateKey(month === 11 ? year + 1 : year, month === 11 ? 0 : month + 1, day);
+      const cell = createDayCell(day, nextDateKey, true);
+      calendarGrid.appendChild(cell);
+    }
+
+    renderSelectedDatePanel();
+    renderUpcomingExams();
+    updateOverviewCounts();
+  }
+
+  function createDayCell(dayNumber, dateKey, isMuted, isToday = false) {
+    const isSelected = (dateKey === selectedDateStr);
+    const dayEvents = events.filter(e => e.date === dateKey);
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.setAttribute('data-date', dateKey);
+
+    // Styling basis
+    let baseClasses = "relative flex flex-col items-center justify-between min-h-[58px] sm:min-h-[70px] p-1.5 rounded-xl transition-all cursor-pointer select-none text-left ";
+    
+    if (isSelected) {
+      baseClasses += "bg-surface-container text-on-surface shadow-sm ring-2 ring-primary-container ";
+    } else if (isToday) {
+      baseClasses += "bg-surface-container-low text-primary-container font-bold ";
+    } else if (isMuted) {
+      baseClasses += "bg-surface-container-lowest/40 text-on-surface-variant/40 hover:bg-surface-container-low/60 ";
+    } else {
+      baseClasses += "bg-surface-container-lowest text-on-surface hover:bg-surface-container-low ";
+    }
+
+    button.className = baseClasses;
+
+    // Day Number
+    const topRow = document.createElement('div');
+    topRow.className = "w-full flex items-center justify-between";
+
+    const dayNumSpan = document.createElement('span');
+    dayNumSpan.className = `font-label-md text-label-md ${isSelected ? 'font-bold text-primary-container' : ''} ${isToday && !isSelected ? 'text-primary-container font-bold' : ''}`;
+    dayNumSpan.textContent = dayNumber;
+    topRow.appendChild(dayNumSpan);
+
+    if (isToday) {
+      const todayDot = document.createElement('span');
+      todayDot.className = "w-1.5 h-1.5 rounded-full bg-primary-container";
+      topRow.appendChild(todayDot);
+    }
+
+    button.appendChild(topRow);
+
+    // Event indicator badges / dots
+    const dotsContainer = document.createElement('div');
+    dotsContainer.className = "w-full flex flex-wrap items-center gap-1 mt-1 justify-start overflow-hidden";
+
+    if (dayEvents.length > 0) {
+      dayEvents.slice(0, 3).forEach(evt => {
+        const dot = document.createElement('span');
+        if (evt.type === 'Exam') {
+          dot.className = "w-2 h-2 rounded-full bg-primary-container";
+        } else if (evt.type === 'Assignment Deadline') {
+          dot.className = "w-2 h-2 rounded-full bg-tertiary-container";
+        } else {
+          dot.className = "w-2 h-2 rounded-full bg-outline";
+        }
+        dotsContainer.appendChild(dot);
+      });
+
+      if (dayEvents.length > 3) {
+        const plusCount = document.createElement('span');
+        plusCount.className = "text-[10px] leading-tight font-semibold text-on-surface-variant";
+        plusCount.textContent = `+${dayEvents.length - 3}`;
+        dotsContainer.appendChild(plusCount);
+      }
+    }
+
+    button.appendChild(dotsContainer);
+
+    // Day click listener
+    button.addEventListener('click', () => {
+      selectedDateStr = dateKey;
+      renderCalendar();
+    });
+
+    return button;
+  }
+
+  // Render events for currently chosen day
+  function renderSelectedDatePanel() {
+    selectedDateHeading.textContent = formatPrettyDate(selectedDateStr);
+    const dayEvents = events.filter(e => e.date === selectedDateStr);
+    selectedDateCount.textContent = `${dayEvents.length} event${dayEvents.length === 1 ? '' : 's'}`;
+
+    selectedEventsList.innerHTML = '';
+
+    if (dayEvents.length === 0) {
+      const emptyBox = document.createElement('div');
+      emptyBox.className = "py-8 px-4 flex flex-col items-center justify-center text-center rounded-xl bg-surface-container-low/60";
+      emptyBox.innerHTML = `
+        <span class="material-symbols-outlined text-outline text-[32px] mb-2 opacity-60">calendar_today</span>
+        <p class="font-label-md text-label-md text-on-surface font-medium">No events scheduled for this date</p>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Keep track of preparation or study deadlines.</p>
+        <button id="quick-add-for-day-btn" class="mt-4 px-3.5 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-label-md text-label-md hover:bg-surface-container shadow-xs transition-colors">
+          + Schedule Event
+        </button>
+      `;
+      selectedEventsList.appendChild(emptyBox);
+
+      document.getElementById('quick-add-for-day-btn').addEventListener('click', () => {
+        openModalWithDate(selectedDateStr);
+      });
+      return;
+    }
+
+    dayEvents.forEach(evt => {
+      const card = document.createElement('div');
+      card.className = "p-3.5 rounded-xl bg-surface-container-low flex flex-col gap-2 transition-all hover:bg-surface-container";
+
+      // Tag styling by type
+      let typeBg = "bg-primary-fixed text-primary font-semibold";
+      if (evt.type === 'Assignment Deadline') {
+        typeBg = "bg-tertiary-fixed text-tertiary font-semibold";
+      } else if (evt.type === 'Other') {
+        typeBg = "bg-surface-container text-on-surface-variant";
+      }
+
+      const timeRange = evt.startTime 
+        ? `${formatTimeDisplay(evt.startTime)}${evt.endTime ? ' - ' + formatTimeDisplay(evt.endTime) : ''}`
+        : 'All Day / Flexible';
+
+      card.innerHTML = `
+        <div class="flex items-start justify-between gap-2">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="px-2 py-0.5 rounded-md text-label-sm font-label-sm ${typeBg}">${evt.type}</span>
+            ${evt.subject ? `<span class="px-2 py-0.5 rounded-md text-label-sm font-label-sm bg-surface-container-lowest text-on-surface-variant font-medium">${evt.subject}</span>` : ''}
+          </div>
+          <div class="flex items-center gap-1">
+            <button class="edit-event-btn p-1 text-on-surface-variant hover:text-primary transition-colors" data-id="${evt.id}" title="Edit Event">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+            </button>
+            <button class="delete-event-btn p-1 text-on-surface-variant hover:text-error transition-colors" data-id="${evt.id}" title="Delete Event">
+              <span class="material-symbols-outlined text-[18px]">delete</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-col">
+          <h4 class="font-label-lg text-label-lg text-on-surface font-semibold leading-tight">${evt.title}</h4>
+          <div class="flex items-center gap-2 mt-1.5 text-body-sm font-body-sm text-on-surface-variant">
+            <span class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-[15px]">schedule</span>
+              ${timeRange}
+            </span>
+          </div>
+          ${evt.location ? `
+            <div class="flex items-center gap-1 mt-1 text-body-sm font-body-sm text-on-surface-variant truncate">
+              <span class="material-symbols-outlined text-[15px]">location_on</span>
+              <span class="truncate">${evt.location}</span>
+            </div>
+          ` : ''}
+        </div>
+      `;
+
+      // Event Listeners for Edit & Delete
+      card.querySelector('.edit-event-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        openModalForEdit(evt.id);
+      });
+
+      card.querySelector('.delete-event-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        handleDeleteEvent(evt.id);
+      });
+
+      selectedEventsList.appendChild(card);
+    });
+  }
+
+  // Render Upcoming Exams Sidebar
+  function renderUpcomingExams() {
+    upcomingExamsList.innerHTML = '';
+
+    const today = getToday();
+const todayDateKey = toDateKey(
+  today.getFullYear(),
+  today.getMonth(),
+  today.getDate()
+);
+    
+    // Filter exams on or after today
+    const upcoming = events
+      .filter(e => e.type === 'Exam' && e.date >= todayDateKey)
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .slice(0, 4);
+
+    if (upcoming.length === 0) {
+      const emptyNotice = document.createElement('div');
+      emptyNotice.className = "p-4 rounded-xl bg-surface-container-low text-center text-on-surface-variant font-body-sm text-body-sm";
+      emptyNotice.textContent = "No exams scheduled in the upcoming period.";
+      upcomingExamsList.appendChild(emptyNotice);
+      return;
+    }
+
+    upcoming.forEach(exam => {
+      const examDate = new Date(exam.date + 'T00:00:00');
+      const todayZero = getToday();
+      const diffTime = examDate - todayZero;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      let countdownBadge = diffDays === 0 ? "Today" : (diffDays === 1 ? "Tomorrow" : `In ${diffDays} days`);
+
+      const item = document.createElement('div');
+      item.className = "p-3 rounded-xl bg-surface-container-low flex flex-col gap-1.5 cursor-pointer hover:bg-surface-container transition-colors";
+      item.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-primary-fixed text-primary font-bold">
+            ${countdownBadge}
+          </span>
+          <span class="font-label-sm text-label-sm text-on-surface-variant">
+            ${exam.startTime ? formatTimeDisplay(exam.startTime) : 'TBD'}
+          </span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-label-md text-label-md text-on-surface font-semibold truncate">${exam.title}</span>
+          <span class="font-body-sm text-body-sm text-on-surface-variant truncate">${exam.subject || 'General Academic'} • ${formatPrettyDate(exam.date)}</span>
+        </div>
+      `;
+
+      item.addEventListener('click', () => {
+        selectedDateStr = exam.date;
+        const [y, m] = exam.date.split('-').map(Number);
+        viewDate = new Date(y, m - 1, 1);
+        renderCalendar();
+      });
+
+      upcomingExamsList.appendChild(item);
+    });
+  }
+
+  // Modal Functions
+  function openModalWithDate(dateStr) {
+    eventIdInput.value = '';
+    modalTitle.textContent = "Add New Event";
+    eventTitleInput.value = '';
+    eventSubjectInput.value = '';
+    eventDateInput.value = dateStr || selectedDateStr;
+    eventStartTimeInput.value = '09:00';
+    eventEndTimeInput.value = '10:30';
+    eventLocationInput.value = '';
+    setEventType('Exam');
+    titleError.classList.add('hidden');
+    eventModal.classList.remove('hidden');
+  }
+
+  function openModalForEdit(id) {
+    const evt = events.find(e => e.id === id);
+    if (!evt) return;
+
+    eventIdInput.value = evt.id;
+    modalTitle.textContent = "Edit Event";
+    eventTitleInput.value = evt.title;
+    eventSubjectInput.value = evt.subject || '';
+    eventDateInput.value = evt.date;
+    eventStartTimeInput.value = evt.startTime || '';
+    eventEndTimeInput.value = evt.endTime || '';
+    eventLocationInput.value = evt.location || '';
+    setEventType(evt.type || 'Exam');
+    titleError.classList.add('hidden');
+    eventModal.classList.remove('hidden');
+  }
+
+  function closeModal() {
+    eventModal.classList.add('hidden');
+    titleError.classList.add('hidden');
+  }
+
+  function setEventType(type) {
+    eventTypeInput.value = type;
+    eventTypeBtns.forEach(btn => {
+      if (btn.getAttribute('data-type') === type) {
+        btn.className = "event-type-btn py-1.5 px-2 rounded-lg font-label-md text-label-md transition-all text-center flex items-center justify-center gap-1.5 bg-surface-container-lowest text-primary shadow-sm font-semibold";
+      } else {
+        btn.className = "event-type-btn py-1.5 px-2 rounded-lg font-label-md text-label-md transition-all text-center flex items-center justify-center gap-1.5 text-on-surface-variant hover:text-on-surface";
+      }
+    });
+  }
+
+  async function handleDeleteEvent(id) {
+    if (!confirm("Are you sure you want to delete this event from your calendar?")) return;
+    try {
+      await apiRequest(`/api/events/${encodeURIComponent(id)}`, { method: 'DELETE' });
+      events = events.filter(e => String(e.id) !== String(id));
+      renderCalendar();
+    } catch (error) {
+      alert(`Could not delete event: ${error.message}`);
+    }
+  }
+
+  // Event Listeners for Month Controls
+  prevMonthBtn.addEventListener('click', () => {
+    viewDate.setMonth(viewDate.getMonth() - 1);
+    renderCalendar();
+  });
+
+  nextMonthBtn.addEventListener('click', () => {
+    viewDate.setMonth(viewDate.getMonth() + 1);
+    renderCalendar();
+  });
+
+  todayBtn.addEventListener('click', () => {
+  const today = getToday();
+
+  viewDate = new Date(today.getFullYear(), today.getMonth(), 1);
+  selectedDateStr = toDateKey(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate()
+  );
+
+  renderCalendar();
+});
+
+  // Modal Open / Close triggers
+  openAddModalBtn.addEventListener('click', () => openModalWithDate(selectedDateStr));
+  closeModalBtn.addEventListener('click', closeModal);
+  cancelModalBtn.addEventListener('click', closeModal);
+  modalBackdrop.addEventListener('click', closeModal);
+
+  eventTypeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      setEventType(btn.getAttribute('data-type'));
+    });
+  });
+
+  // Form Submit Handler
+  eventForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const titleVal = eventTitleInput.value.trim();
+    if (!titleVal) {
+      titleError.classList.remove('hidden');
+      eventTitleInput.focus();
+      return;
+    }
+
+    const editId = eventIdInput.value;
+    const dateVal = eventDateInput.value;
+
+    const body = {
+      title: titleVal,
+      type: eventTypeInput.value,
+      subject: eventSubjectInput.value.trim(),
+      date: dateVal,
+      start_time: eventStartTimeInput.value,
+      end_time: eventEndTimeInput.value,
+      location: eventLocationInput.value.trim()
+    };
+
+    try {
+      const result = editId
+        ? await apiRequest(`/api/events/${encodeURIComponent(editId)}`, { method: 'PATCH', body: JSON.stringify(body) })
+        : await apiRequest('/api/events', { method: 'POST', body: JSON.stringify(body) });
+      const saved = normalizeEvent(result.event);
+      if (editId) events = events.map(ev => String(ev.id) === String(editId) ? saved : ev);
+      else events.push(saved);
+
+      selectedDateStr = dateVal;
+      const [y, m] = dateVal.split('-').map(Number);
+      viewDate = new Date(y, m - 1, 1);
+      closeModal();
+      renderCalendar();
+    } catch (error) {
+      alert(`Could not save event: ${error.message}`);
+    }
+  });
+
+  // Keyboard navigation & Escape dismiss
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !eventModal.classList.contains('hidden')) {
+      closeModal();
+    }
+  });
+
+  // Initial render, then load saved events from the backend.
+  renderCalendar();
+  loadEvents();
+})();
+</script></main><footer class="w-full bg-surface-container-lowest border-t border-secondary-fixed py-space-lg"><div class="max-w-7xl mx-auto px-gutter flex flex-col md:flex-row items-center justify-between gap-space-sm text-center md:text-left"><p class="font-body-sm text-body-sm text-on-surface-variant">© 2025 StudyPilot Academic Intelligence. All rights reserved.</p><div class="flex items-center gap-space-md"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="privacy" href="#">Privacy</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="terms" href="#">Terms</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="help-support" href="#">Support</a></div></div></footer></body></html>

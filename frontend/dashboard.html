@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="shell-type" content="web_dashboard">
+  <title>StudyPilot | Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#2a14b4",
+            "primary-container": "#4338ca",
+            "secondary": "#712ae2",
+            "secondary-container": "#8a4cfc",
+            "surface": "#f8f9ff",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#eff4ff",
+            "surface-container": "#e5eeff",
+            "surface-container-high": "#dce9ff",
+            "on-surface": "#0b1c30",
+            "on-surface-variant": "#464554",
+            "outline": "#777586",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6"
+          },
+          fontFamily: { display: ["Inter", "sans-serif"], body: ["Inter", "sans-serif"] }
+        }
+      }
+    };
+  </script>
+  <style>
+    html, body { margin: 0; padding: 0; font-family: Inter, sans-serif; }
+    body { overscroll-behavior: none; }
+    ::-webkit-scrollbar { display: none; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+  <!-- Sidebar navigation -->
+  <aside class="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col justify-between bg-white shadow-sm md:flex">
+    <div>
+      <div class="flex h-16 items-center gap-3 px-6">
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-container text-white">
+          <span class="material-symbols-outlined">menu_book</span>
+        </div>
+        <div>
+          <div class="font-bold leading-tight text-primary">StudyPilot</div>
+          <div class="text-xs text-on-surface-variant">Smart Planner</div>
+        </div>
+      </div>
+      <nav class="mt-4 flex flex-col gap-1 px-3">
+        <a aria-current="page" class="flex items-center gap-3 rounded-xl bg-primary-container px-4 py-3 font-semibold text-white" href="dashboard.html">
+          <span class="material-symbols-outlined">grid_view</span>Dashboard
+        </a>
+        <!-- Removed duplicate My Subjects & Syllabus navigation option as requested. -->
+        
+        <a class="flex items-center gap-3 rounded-xl px-4 py-3 text-on-surface-variant transition hover:bg-surface-container-low hover:text-on-surface" href="assignments_and_tasks.html">
+          <span class="material-symbols-outlined">checklist</span>Assignments &amp; Tasks
+        </a>
+        <a class="flex items-center gap-3 rounded-xl px-4 py-3 text-on-surface-variant transition hover:bg-surface-container-low hover:text-on-surface" href="calendar_and_exams.html">
+          <span class="material-symbols-outlined">calendar_today</span>Calendar &amp; Exams
+        </a>
+      </nav>
+    </div>
+    <div class="p-4">
+      <div class="flex items-center justify-between rounded-xl bg-surface-container-low p-3">
+        <div>
+          <div class="text-sm font-semibold">Focus Mode</div>
+          <div class="text-xs text-on-surface-variant">Ready to focus</div>
+        </div>
+        <span class="material-symbols-outlined text-secondary">bolt</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="flex min-h-screen flex-col md:pl-64">
+    <!-- Top bar -->
+    <header class="fixed left-0 right-0 top-0 z-30 h-16 bg-white/90 shadow-sm backdrop-blur md:left-64">
+      <div class="flex h-16 items-center justify-between px-4 sm:px-6">
+        <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+          <span class="material-symbols-outlined text-lg">school</span>
+          <span class="hidden sm:inline">Semester Academic Workspace</span>
+        </div>
+
+        <!-- Profile button and dropdown: user information plus logout only -->
+        <div class="relative" id="profile-menu">
+          <button id="profile-menu-button" type="button" aria-expanded="false" aria-controls="profile-dropdown"
+            class="flex items-center gap-3 rounded-xl px-2 py-1.5 transition hover:bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary">
+            <div class="hidden text-right sm:block">
+              <div id="header-user-name" class="text-sm font-semibold">Student</div>
+              <div id="header-user-email" class="max-w-52 truncate text-xs text-on-surface-variant">student@example.com</div>
+            </div>
+            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white">
+              <span class="material-symbols-outlined">person</span>
+            </div>
+            <span id="profile-chevron" class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+          </button>
+
+          <div id="profile-dropdown" role="menu" aria-labelledby="profile-menu-button"
+            class="absolute right-0 top-full mt-2 hidden w-72 overflow-hidden rounded-xl bg-white py-2 shadow-xl ring-1 ring-black/5">
+            <div class="border-b border-surface-container-high px-4 py-3">
+              <div class="text-xs font-medium uppercase tracking-wide text-on-surface-variant">Signed in as</div>
+              <div id="dropdown-user-name" class="mt-1 font-semibold">Student</div>
+              <div id="dropdown-user-email" class="break-all text-sm text-on-surface-variant">student@example.com</div>
+            </div>
+            <!-- Profile & Settings link intentionally removed. -->
+            <button id="logout-button" type="button" role="menuitem" class="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-error transition hover:bg-red-50">
+              <span class="material-symbols-outlined text-xl">logout</span>Log out
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 pt-16">
+      <div class="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
+        <!-- Welcome section -->
+        <section class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+              <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-primary"></span>
+              Your academic workspace
+            </div>
+            <h1 class="text-3xl font-bold tracking-tight">Welcome back, <span id="welcome-user-name">Student</span>!</h1>
+            <p class="text-on-surface-variant">Let's make today a productive study day.</p>
+          </div>
+          <!-- Removed duplicate View Syllabus button as requested. -->
+        </section>
+
+        <!-- Overview cards -->
+        <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <a href="subject_and_syllabus.html" class="flex flex-col justify-between rounded-xl bg-white p-5 shadow-sm transition hover:shadow-md">
+            <div class="flex items-center justify-between text-sm font-medium text-on-surface-variant">
+              My Subjects
+              <span class="material-symbols-outlined rounded-lg bg-surface-container p-2 text-primary">auto_stories</span>
+            </div>
+            <div class="mt-4 flex items-baseline gap-2">
+              <span id="subjects-count" class="text-3xl font-bold">—</span><span class="text-xs font-semibold text-primary">Active</span>
+            </div>
+            <p class="mt-1 text-xs text-on-surface-variant">Enrolled courses</p>
+          </a>
+          <div class="flex flex-col justify-between rounded-xl bg-white p-5 shadow-sm">
+            <div class="flex items-center justify-between text-sm font-medium text-on-surface-variant">
+              Tasks Completed
+              <span class="material-symbols-outlined rounded-lg bg-surface-container p-2 text-secondary">task_alt</span>
+            </div>
+            <div class="mt-4 flex items-baseline justify-between">
+              <div><span id="completed-count-header" class="text-3xl font-bold">—</span><span class="ml-1 text-sm text-on-surface-variant">of <span id="total-task-count">—</span></span></div>
+              <span id="completed-percentage" class="text-xs font-semibold text-secondary">—</span>
+            </div>
+            <div class="mt-2 h-2 overflow-hidden rounded-full bg-surface-container">
+              <div id="task-progress-bar" class="h-full rounded-full bg-gradient-to-r from-primary to-secondary" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="rounded-xl bg-white p-5 shadow-sm">
+            <div class="flex items-center justify-between text-sm font-medium text-on-surface-variant">
+              Upcoming Deadlines
+              <span class="material-symbols-outlined rounded-lg bg-surface-container p-2 text-orange-700">schedule</span>
+            </div>
+           
+<div class="mt-4 flex items-baseline gap-2">
+  <span id="upcoming-deadlines-count" class="text-3xl font-bold">—</span>
+  <span id="upcoming-deadlines-label" class="rounded-full bg-orange-100 px-2 py-1 text-xs font-semibold text-orange-800">Loading</span>
+</div>
+<p class="mt-1 text-xs text-on-surface-variant">Overdue and due within 48 hours</p>
+
+          </div>
+          
+<div class="rounded-xl bg-white p-5 shadow-sm">
+  <div class="flex items-center justify-between text-sm font-medium text-on-surface-variant">
+    Next Exam
+    <span class="material-symbols-outlined rounded-lg bg-surface-container p-2 text-primary">event_upcoming</span>
+  </div>
+  <div id="next-exam-title" class="mt-4 font-semibold">Loading exam...</div>
+  <p id="next-exam-details" class="mt-1 text-xs text-on-surface-variant">
+    Checking your calendar
+  </p>
+</div>
+
+        </section>
+
+        <!-- Planner call to action -->
+        <section class="flex flex-col justify-between gap-6 rounded-2xl bg-indigo-50 p-6 shadow-sm sm:p-8 lg:flex-row lg:items-center">
+          <div class="flex items-start gap-4">
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-primary shadow-sm">
+              <span class="material-symbols-outlined text-3xl">psychology</span>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <h2 class="text-xl font-bold">AI Study Planner</h2>
+                <span class="rounded-full bg-purple-100 px-2 py-1 text-xs font-semibold text-purple-800">Adaptive</span>
+              </div>
+              <p class="mt-1 max-w-2xl text-sm leading-6 text-on-surface-variant">Create a personalized study schedule based on your subjects, available time, and priorities.</p>
+            </div>
+          </div>
+          <a href="ai_study_planner.html" class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-primary-container">
+            <span class="material-symbols-outlined">auto_awesome</span>Open Study Planner
+          </a>
+        </section>
+
+        <!-- Today's tasks and side panels -->
+        <section class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div class="space-y-4 lg:col-span-2">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <h2 class="text-xl font-semibold">Today's Tasks</h2>
+                <span id="remaining-badge" class="rounded-full bg-surface-container-high px-2.5 py-1 text-xs font-semibold text-on-surface-variant">3 remaining</span>
+              </div>
+              <button id="toggle-filter-btn" type="button" class="rounded-lg px-3 py-2 text-sm font-medium text-on-surface-variant transition hover:bg-surface-container-low">Hide Completed</button>
+            </div>
+           <div id="tasks-container" class="space-y-3">
+              <div class="task-card flex items-center justify-between gap-4 rounded-xl bg-white p-4 shadow-sm transition hover:shadow-md" data-completed="false">
+                <div class="flex min-w-0 items-center gap-3">
+                  <button type="button" aria-label="Mark task as complete" class="task-checkbox flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-slate-300 text-transparent"><span class="material-symbols-outlined text-base">check</span></button>
+                  <div class="min-w-0"><p class="task-title truncate font-semibold">Differential Calculus Problem Set 3</p><p class="mt-1 text-xs text-on-surface-variant">Mathematics · Today, 4:00 PM</p></div>
+                </div>
+                <span class="shrink-0 rounded-md bg-surface-container-low px-2 py-1 text-xs">Priority</span>
+              </div>
+              <div class="task-card flex items-center justify-between gap-4 rounded-xl bg-white p-4 shadow-sm transition hover:shadow-md" data-completed="false">
+                <div class="flex min-w-0 items-center gap-3">
+                  <button type="button" aria-label="Mark task as complete" class="task-checkbox flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-slate-300 text-transparent"><span class="material-symbols-outlined text-base">check</span></button>
+                  <div class="min-w-0"><p class="task-title truncate font-semibold">Read Classical Mechanics Chapter 4</p><p class="mt-1 text-xs text-on-surface-variant">Physics · Today, 7:30 PM</p></div>
+                </div>
+                <span class="shrink-0 rounded-md bg-surface-container-low px-2 py-1 text-xs">Reading</span>
+              </div>
+              <div class="task-card flex items-center justify-between gap-4 rounded-xl bg-white p-4 shadow-sm transition hover:shadow-md" data-completed="false">
+                <div class="flex min-w-0 items-center gap-3">
+                  <button type="button" aria-label="Mark task as complete" class="task-checkbox flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-slate-300 text-transparent"><span class="material-symbols-outlined text-base">check</span></button>
+                  <div class="min-w-0"><p class="task-title truncate font-semibold">Data Structures Quiz Revision</p><p class="mt-1 text-xs text-on-surface-variant">Computer Science · Tonight, 10:00 PM</p></div>
+                </div>
+                <span class="shrink-0 rounded-md bg-surface-container-low px-2 py-1 text-xs">Quiz Prep</span>
+              </div>
+              <div class="task-card flex items-center justify-between gap-4 rounded-xl bg-white p-4 opacity-75 shadow-sm transition hover:shadow-md" data-completed="true">
+                <div class="flex min-w-0 items-center gap-3">
+                  <button type="button" aria-label="Mark task as incomplete" class="task-checkbox flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-primary-container text-white"><span class="material-symbols-outlined text-base">check</span></button>
+                  <div class="min-w-0"><p class="task-title truncate font-semibold line-through text-on-surface-variant">Review Linear Algebra Lecture Notes</p><p class="mt-1 text-xs text-on-surface-variant">Mathematics · Completed at 11:20 AM</p></div>
+                </div>
+                <span class="shrink-0 rounded-md bg-surface-container px-2 py-1 text-xs">Done</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            
+<div id="study-sprint-card" class="space-y-4 rounded-2xl bg-white p-6 shadow-sm">
+  <div class="flex items-center justify-between">
+    <div>
+      <h3 class="text-lg font-semibold">Study Sprint</h3>
+      <p id="sprint-mode-label" class="mt-1 text-xs text-on-surface-variant">Focus session</p>
+    </div>
+    <button id="sprint-settings-button" type="button"
+      aria-label="Customize study sprint"
+      class="flex h-9 w-9 items-center justify-center rounded-lg text-on-surface-variant transition hover:bg-surface-container-low">
+      <span class="material-symbols-outlined">settings</span>
+    </button>
+  </div>
+
+  <div class="flex flex-col items-center gap-3 py-3">
+    <div id="sprint-time-display" role="timer" aria-live="off"
+      class="text-5xl font-bold tracking-tight text-primary tabular-nums">
+      65:00
+    </div>
+    <div id="sprint-session-progress" class="text-sm text-on-surface-variant">
+      Focus session 1 of 4
+    </div>
+    <div class="h-2 w-full overflow-hidden rounded-full bg-surface-container">
+      <div id="sprint-progress-bar"
+        class="h-full rounded-full bg-gradient-to-r from-primary to-secondary transition-all duration-300"
+        style="width:100%"></div>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-center gap-3">
+    <button id="sprint-reset-button" type="button"
+      class="flex h-11 w-11 items-center justify-center rounded-xl bg-surface-container-low text-on-surface-variant transition hover:bg-surface-container">
+      <span class="material-symbols-outlined">restart_alt</span>
+    </button>
+    <button id="sprint-start-button" type="button"
+      class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-semibold text-white transition hover:bg-primary-container">
+      <span id="sprint-start-icon" class="material-symbols-outlined">play_arrow</span>
+      <span id="sprint-start-label">Start Focus</span>
+    </button>
+    <button id="sprint-skip-button" type="button"
+      aria-label="Skip to next session"
+      class="flex h-11 w-11 items-center justify-center rounded-xl bg-surface-container-low text-on-surface-variant transition hover:bg-surface-container">
+      <span class="material-symbols-outlined">skip_next</span>
+    </button>
+  </div>
+
+  <p id="sprint-message" class="text-center text-xs text-on-surface-variant" aria-live="polite">
+    Ready when you are. Customize your sprint using settings.
+  </p>
+</div>
+
+<div id="sprint-settings-modal" hidden
+  class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4">
+  <div role="dialog" aria-modal="true" aria-labelledby="sprint-settings-title"
+    class="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
+    <div class="flex items-center justify-between gap-4">
+      <div>
+        <h3 id="sprint-settings-title" class="text-xl font-bold">Sprint Settings</h3>
+        <p class="mt-1 text-sm text-on-surface-variant">Customize your study rhythm</p>
+      </div>
+      <button id="sprint-settings-close" type="button" aria-label="Close settings"
+        class="flex h-9 w-9 items-center justify-center rounded-lg hover:bg-surface-container-low">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form id="sprint-settings-form" class="mt-6 space-y-5">
+      <div>
+        <label for="sprint-focus-minutes" class="mb-2 block text-sm font-medium">Focus duration (minutes)</label>
+        <input id="sprint-focus-minutes" type="number" min="1" max="180" required value="65"
+          class="w-full rounded-xl border border-slate-200 px-3 py-2.5 outline-none focus:border-primary focus:ring-2 focus:ring-indigo-100">
+      </div>
+
+      <div>
+        <label for="sprint-short-break" class="mb-2 block text-sm font-medium">Short break (minutes)</label>
+        <input id="sprint-short-break" type="number" min="1" max="60" required value="7"
+          class="w-full rounded-xl border border-slate-200 px-3 py-2.5 outline-none focus:border-primary focus:ring-2 focus:ring-indigo-100">
+      </div>
+
+      <div>
+        <label for="sprint-long-break" class="mb-2 block text-sm font-medium">Long break (minutes)</label>
+        <input id="sprint-long-break" type="number" min="1" max="120" required value="20"
+          class="w-full rounded-xl border border-slate-200 px-3 py-2.5 outline-none focus:border-primary focus:ring-2 focus:ring-indigo-100">
+      </div>
+
+      <div>
+        <label for="sprint-cycle-count" class="mb-2 block text-sm font-medium">Focus sessions before a long break</label>
+        <select id="sprint-cycle-count"
+          class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 outline-none focus:border-primary focus:ring-2 focus:ring-indigo-100">
+          <option value="2">2 sessions</option>
+          <option value="3">3 sessions</option>
+          <option value="4" selected>4 sessions</option>
+          <option value="5">5 sessions</option>
+          <option value="6">6 sessions</option>
+        </select>
+      </div>
+
+      <label class="flex items-start gap-3 text-sm">
+        <input id="sprint-auto-next" type="checkbox" checked
+          class="mt-0.5 h-4 w-4 accent-indigo-700">
+        <span>
+          <span class="font-medium">Automatically start the next session</span>
+          <span class="mt-1 block text-xs text-on-surface-variant">Start the next focus or break session when the countdown reaches zero.</span>
+        </span>
+      </label>
+
+      <p id="sprint-settings-error" class="text-sm text-red-600" role="alert"></p>
+
+      <div class="flex gap-3 pt-1">
+        <button id="sprint-settings-cancel" type="button"
+          class="flex-1 rounded-xl border border-slate-200 px-4 py-3 font-semibold hover:bg-surface-container-low">
+          Cancel
+        </button>
+        <button type="submit"
+          class="flex-1 rounded-xl bg-primary px-4 py-3 font-semibold text-white hover:bg-primary-container">
+          Save settings
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+            
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const profileButton = document.getElementById("profile-menu-button");
+      const profileDropdown = document.getElementById("profile-dropdown");
+      const logoutButton = document.getElementById("logout-button");
+
+      function readStoredValue(keys) {
+        for (const key of keys) {
+          try {
+            const value = localStorage.getItem(key) || sessionStorage.getItem(key);
+            if (value) return value;
+          } catch (error) {
+            // Storage may be unavailable in some browser configurations.
+          }
+        }
+        return "";
+      }
+
+      function getStoredUser() {
+        const rawUser = readStoredValue(["studypilot_user", "user", "currentUser"]);
+        if (rawUser) {
+          try {
+            const user = JSON.parse(rawUser);
+            if (user && typeof user === "object") return user;
+          } catch (error) {
+            if (rawUser.includes("@")) return { email: rawUser };
+          }
+        }
+        return {};
+      }
+
+      function displayProfile() {
+        const user = getStoredUser();
+        const email = user.email || user.user_email || readStoredValue(["studypilot_user_email", "user_email", "email"]) || "Signed-in student";
+        const name = user.name || user.full_name || user.username || user.fullName ||
+          readStoredValue(["studypilot_user_name", "user_name", "username"]) ||
+          (email.includes("@") ? email.split("@")[0].replace(/[._-]+/g, " ").replace(/\b\w/g, c => c.toUpperCase()) : "Student");
+
+        document.getElementById("header-user-name").textContent = name;
+        document.getElementById("header-user-email").textContent = email;
+        document.getElementById("dropdown-user-name").textContent = name;
+        document.getElementById("dropdown-user-email").textContent = email;
+        document.getElementById("welcome-user-name").textContent = name;
+      }
+
+      function setProfileMenu(open) {
+        profileDropdown.classList.toggle("hidden", !open);
+        profileButton.setAttribute("aria-expanded", String(open));
+        const chevron = document.getElementById("profile-chevron");
+        if (chevron) chevron.textContent = open ? "expand_less" : "expand_more";
+      }
+
+      profileButton.addEventListener("click", function (event) {
+        event.stopPropagation();
+        setProfileMenu(profileDropdown.classList.contains("hidden"));
+      });
+
+      document.addEventListener("click", function (event) {
+        if (!event.target.closest("#profile-menu")) setProfileMenu(false);
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") setProfileMenu(false);
+      });
+
+      logoutButton.addEventListener("click", function () {
+        const confirmed = window.confirm("Are you sure you want to log out?");
+        if (!confirmed) return;
+
+        const keysToRemove = [
+          "studypilot_access_token", "studypilot_refresh_token", "access_token",
+          "refresh_token", "token", "studypilot_user", "user", "currentUser",
+          "studypilot_user_email", "user_email", "email", "studypilot_user_name",
+          "user_name", "username"
+        ];
+
+        keysToRemove.forEach(function (key) {
+          try {
+            localStorage.removeItem(key);
+            sessionStorage.removeItem(key);
+          } catch (error) {
+            // Continue redirecting even if storage is unavailable.
+          }
+        });
+
+        // The provided server log shows frontend/login.html currently returns 404.
+        // Send the user to the frontend folder index until the real login page exists.
+        window.location.href = "index.html";
+      });
+
+      displayProfile();
+
+    
+      // Load real assignments and keep task status synchronized with Flask.
+      const tasksContainer = document.getElementById("tasks-container");
+      const remainingBadge = document.getElementById("remaining-badge");
+      const completedCount = document.getElementById("completed-count-header");
+      const totalCount = document.getElementById("total-task-count");
+      const completedPercentage = document.getElementById("completed-percentage");
+      const progressBar = document.getElementById("task-progress-bar");
+      const upcomingDeadlinesCount = document.getElementById("upcoming-deadlines-count");
+      const toggleFilterButton = document.getElementById("toggle-filter-btn");
+
+      let allAssignments = [];
+      let hideCompleted = false;
+
+      function getAssignmentCompleted(assignment) {
+        const status = String(assignment.status || "").toLowerCase();
+        return ["completed", "complete", "done", "submitted"].includes(status)
+          || Boolean(assignment.completed_at);
+      }
+
+      function getDueDate(assignment) {
+        const value = assignment.due_at || assignment.due_date;
+        if (!value) return null;
+
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? null : date;
+      }
+
+      function isSameLocalDay(first, second) {
+        return first.getFullYear() === second.getFullYear()
+          && first.getMonth() === second.getMonth()
+          && first.getDate() === second.getDate();
+      }
+
+      function updateAssignmentMetrics() {
+        const total = allAssignments.length;
+        const completed = allAssignments.filter(getAssignmentCompleted).length;
+        const percentage = total ? Math.round((completed / total) * 100) : 0;
+
+        completedCount.textContent = completed;
+        totalCount.textContent = total;
+        completedPercentage.textContent = percentage + "%";
+        progressBar.style.width = percentage + "%";
+
+        const now = new Date();
+        const fortyEightHoursLater = new Date(
+          now.getTime() + 48 * 60 * 60 * 1000
+        );
+
+        
+const upcoming = allAssignments.filter(function (assignment) {
+  const dueDate = getDueDate(assignment);
+
+  return dueDate
+    && !getAssignmentCompleted(assignment)
+    && dueDate <= fortyEightHoursLater;
+}).length;
+
+        
+upcomingDeadlinesCount.textContent = upcoming;
+
+const upcomingDeadlinesLabel = document.getElementById(
+  "upcoming-deadlines-label"
+);
+
+if (upcomingDeadlinesLabel) {
+  if (upcoming === 0) {
+    upcomingDeadlinesLabel.textContent = "All clear";
+    upcomingDeadlinesLabel.className =
+      "rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800";
+  } else if (upcoming <= 2) {
+    upcomingDeadlinesLabel.textContent = "Upcoming";
+    upcomingDeadlinesLabel.className =
+      "rounded-full bg-orange-100 px-2 py-1 text-xs font-semibold text-orange-800";
+  } else {
+    upcomingDeadlinesLabel.textContent = "Urgent";
+    upcomingDeadlinesLabel.className =
+      "rounded-full bg-red-100 px-2 py-1 text-xs font-semibold text-red-800";
+  }
+}
+
+      }
+
+      function styleTaskCard(card, completed) {
+        card.dataset.completed = String(completed);
+
+        const button = card.querySelector(".task-checkbox");
+        const title = card.querySelector(".task-title");
+
+        button.setAttribute(
+          "aria-label",
+          completed ? "Mark task as incomplete" : "Mark task as complete"
+        );
+
+        button.classList.toggle("bg-primary-container", completed);
+        button.classList.toggle("text-white", completed);
+        button.classList.toggle("text-transparent", !completed);
+        button.classList.toggle("border", !completed);
+        button.classList.toggle("border-slate-300", !completed);
+
+        title.classList.toggle("line-through", completed);
+        title.classList.toggle("text-on-surface-variant", completed);
+        title.classList.toggle("font-semibold", !completed);
+
+        card.classList.toggle("opacity-75", completed);
+        card.classList.toggle("hidden", hideCompleted && completed);
+      }
+
+      function createTaskCard(assignment) {
+        const completed = getAssignmentCompleted(assignment);
+        const dueDate = getDueDate(assignment);
+
+        const card = document.createElement("div");
+        card.className =
+          "task-card flex items-center justify-between gap-4 rounded-xl bg-white p-4 shadow-sm transition hover:shadow-md";
+        card.dataset.assignmentId = String(assignment.id);
+
+        const left = document.createElement("div");
+        left.className = "flex min-w-0 items-center gap-3";
+
+        const checkbox = document.createElement("button");
+        checkbox.type = "button";
+        checkbox.className =
+          "task-checkbox flex h-5 w-5 shrink-0 items-center justify-center rounded-md";
+        checkbox.innerHTML =
+          '<span class="material-symbols-outlined text-base">check</span>';
+
+        const details = document.createElement("div");
+        details.className = "min-w-0";
+
+        const title = document.createElement("p");
+        title.className = "task-title truncate font-semibold";
+        title.textContent = assignment.title || "Untitled assignment";
+
+        const subtitle = document.createElement("p");
+        subtitle.className = "mt-1 text-xs text-on-surface-variant";
+
+        const subjectName = typeof assignment.subject === "string"
+          ? assignment.subject
+          : (assignment.subject?.name || "No subject");
+
+        let dueText = "No due date";
+
+        if (dueDate) {
+          const timeText = dueDate.toLocaleTimeString([], {
+            hour: "numeric",
+            minute: "2-digit"
+          });
+
+          if (dueDate < new Date() && !isSameLocalDay(dueDate, new Date())) {
+            dueText = "Overdue · " + dueDate.toLocaleDateString();
+          } else if (isSameLocalDay(dueDate, new Date())) {
+            dueText = "Today, " + timeText;
+          } else {
+            dueText = dueDate.toLocaleDateString([], {
+              month: "short",
+              day: "numeric"
+            }) + ", " + timeText;
+          }
+        }
+
+        subtitle.textContent = subjectName + " · " + dueText;
+
+        const badge = document.createElement("span");
+        badge.className =
+          "shrink-0 rounded-md bg-surface-container-low px-2 py-1 text-xs";
+        badge.textContent = completed
+          ? "Done"
+          : (dueDate && dueDate < new Date() && !isSameLocalDay(dueDate, new Date())
+              ? "Overdue"
+              : "Pending");
+
+        details.append(title, subtitle);
+        left.append(checkbox, details);
+        card.append(left, badge);
+
+        styleTaskCard(card, completed);
+
+        checkbox.addEventListener("click", async function () {
+          const nextCompleted = card.dataset.completed !== "true";
+          const token = readStoredValue([
+            "studypilot_access_token",
+            "access_token",
+            "token"
+          ]);
+
+          if (!token) {
+            remainingBadge.textContent = "Please log in again";
+            return;
+          }
+
+          checkbox.disabled = true;
+
+          try {
+            const response = await fetch(
+              "http://127.0.0.1:5000/api/assignments/"
+                + encodeURIComponent(assignment.id),
+              {
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({
+                  status: nextCompleted ? "completed" : "pending"
+                })
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error("Could not save task status (HTTP " + response.status + ")");
+            }
+
+            const updated = allAssignments.find(function (item) {
+              return String(item.id) === String(assignment.id);
+            });
+
+            if (updated) {
+              updated.status = nextCompleted ? "completed" : "pending";
+              updated.completed_at = nextCompleted
+                ? new Date().toISOString()
+                : null;
+            }
+
+            styleTaskCard(card, nextCompleted);
+            badge.textContent = nextCompleted ? "Done" : "Pending";
+
+            const currentDueDate = getDueDate(assignment);
+            if (!nextCompleted && currentDueDate
+                && currentDueDate < new Date()
+                && !isSameLocalDay(currentDueDate, new Date())) {
+              badge.textContent = "Overdue";
+            }
+
+            updateAssignmentMetrics();
+            updateRemainingBadge();
+          } catch (error) {
+            console.error("Could not update assignment:", error);
+            remainingBadge.textContent = "Could not save change";
+          } finally {
+            checkbox.disabled = false;
+          }
+        });
+
+        return card;
+      }
+
+      function updateRemainingBadge() {
+        const visibleTasks = allAssignments.filter(function (assignment) {
+          const dueDate = getDueDate(assignment);
+          if (!dueDate) return false;
+
+          const now = new Date();
+          const tomorrow = new Date(now);
+          tomorrow.setHours(0, 0, 0, 0);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+
+          return dueDate < tomorrow;
+        });
+
+        const remaining = visibleTasks.filter(function (assignment) {
+          return !getAssignmentCompleted(assignment);
+        }).length;
+
+        remainingBadge.textContent = remaining + " remaining";
+      }
+
+      function renderAssignments() {
+        tasksContainer.replaceChildren();
+
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setHours(0, 0, 0, 0);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        const todaysTasks = allAssignments
+          .filter(function (assignment) {
+            const dueDate = getDueDate(assignment);
+            return dueDate && dueDate < tomorrow;
+          })
+          .sort(function (a, b) {
+            return getDueDate(a) - getDueDate(b);
+          });
+
+        if (!todaysTasks.length) {
+          const empty = document.createElement("p");
+          empty.className =
+            "rounded-xl bg-white p-5 text-sm text-on-surface-variant shadow-sm";
+          empty.textContent =
+            "No overdue or due-today tasks. You're all caught up!";
+          tasksContainer.appendChild(empty);
+        } else {
+          todaysTasks.forEach(function (assignment) {
+            tasksContainer.appendChild(createTaskCard(assignment));
+          });
+        }
+
+        if (hideCompleted) {
+          tasksContainer.querySelectorAll(".task-card").forEach(function (card) {
+            card.classList.toggle("hidden", card.dataset.completed === "true");
+          });
+        }
+
+        updateAssignmentMetrics();
+        updateRemainingBadge();
+      }
+
+      toggleFilterButton.addEventListener("click", function () {
+        hideCompleted = !hideCompleted;
+        toggleFilterButton.textContent = hideCompleted
+          ? "Show Completed"
+          : "Hide Completed";
+
+        tasksContainer.querySelectorAll(".task-card").forEach(function (card) {
+          card.classList.toggle(
+            "hidden",
+            hideCompleted && card.dataset.completed === "true"
+          );
+        });
+      });
+
+      
+(function () {
+  const STORAGE_KEY = "studypilot_sprint_settings";
+
+  const defaults = {
+    focusMinutes: 65,
+    shortBreakMinutes: 7,
+    longBreakMinutes: 20,
+    cycleCount: 4,
+    autoNext: true
+  };
+
+  function loadSettings() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      return {
+        focusMinutes: Number(saved.focusMinutes) || defaults.focusMinutes,
+        shortBreakMinutes: Number(saved.shortBreakMinutes) || defaults.shortBreakMinutes,
+        longBreakMinutes: Number(saved.longBreakMinutes) || defaults.longBreakMinutes,
+        cycleCount: Number(saved.cycleCount) || defaults.cycleCount,
+        autoNext: typeof saved.autoNext === "boolean"
+          ? saved.autoNext
+          : defaults.autoNext
+      };
+    } catch (error) {
+      return { ...defaults };
+    }
+  }
+
+  let settings = loadSettings();
+  let mode = "focus";
+  let completedFocusSessions = 0;
+  let remainingSeconds = settings.focusMinutes * 60;
+  let totalSeconds = remainingSeconds;
+  let running = false;
+  let endTime = null;
+  let intervalId = null;
+
+  const timeDisplay = document.getElementById("sprint-time-display");
+  const modeLabel = document.getElementById("sprint-mode-label");
+  const sessionProgress = document.getElementById("sprint-session-progress");
+  const progressBar = document.getElementById("sprint-progress-bar");
+  const startButton = document.getElementById("sprint-start-button");
+  const startIcon = document.getElementById("sprint-start-icon");
+  const startLabel = document.getElementById("sprint-start-label");
+  const resetButton = document.getElementById("sprint-reset-button");
+  const skipButton = document.getElementById("sprint-skip-button");
+  const message = document.getElementById("sprint-message");
+
+  const settingsButton = document.getElementById("sprint-settings-button");
+  const settingsModal = document.getElementById("sprint-settings-modal");
+  const settingsClose = document.getElementById("sprint-settings-close");
+  const settingsCancel = document.getElementById("sprint-settings-cancel");
+  const settingsForm = document.getElementById("sprint-settings-form");
+  const settingsError = document.getElementById("sprint-settings-error");
+
+  const focusInput = document.getElementById("sprint-focus-minutes");
+  const shortInput = document.getElementById("sprint-short-break");
+  const longInput = document.getElementById("sprint-long-break");
+  const cycleInput = document.getElementById("sprint-cycle-count");
+  const autoInput = document.getElementById("sprint-auto-next");
+
+  if (
+    !timeDisplay || !modeLabel || !sessionProgress || !progressBar ||
+    !startButton || !resetButton || !skipButton || !message ||
+    !settingsButton || !settingsModal || !settingsForm
+  ) {
+    console.warn("Study Sprint: required dashboard elements were not found.");
+    return;
+  }
+
+  function getDurationSeconds(sessionMode) {
+    if (sessionMode === "shortBreak") {
+      return settings.shortBreakMinutes * 60;
+    }
+    if (sessionMode === "longBreak") {
+      return settings.longBreakMinutes * 60;
+    }
+    return settings.focusMinutes * 60;
+  }
+
+  function getModeName(sessionMode) {
+    if (sessionMode === "shortBreak") return "Short break";
+    if (sessionMode === "longBreak") return "Long break";
+    return "Focus session";
+  }
+
+  function formatTime(seconds) {
+    const safeSeconds = Math.max(0, Math.ceil(seconds));
+    const minutes = Math.floor(safeSeconds / 60);
+    const secs = safeSeconds % 60;
+    return String(minutes).padStart(2, "0") + ":" +
+      String(secs).padStart(2, "0");
+  }
+
+  function render() {
+    timeDisplay.textContent = formatTime(remainingSeconds);
+    modeLabel.textContent = getModeName(mode);
+
+    const cyclePosition =
+      (completedFocusSessions % settings.cycleCount) + 1;
+
+    sessionProgress.textContent = mode === "focus"
+      ? `Focus session ${cyclePosition} of ${settings.cycleCount}`
+      : `Completed focus sessions: ${completedFocusSessions}`;
+
+    const percent = totalSeconds > 0
+      ? Math.max(0, Math.min(100, (remainingSeconds / totalSeconds) * 100))
+      : 0;
+
+    progressBar.style.width = percent + "%";
+
+    startIcon.textContent = running ? "pause" : "play_arrow";
+    startLabel.textContent = running
+      ? "Pause"
+      : remainingSeconds === totalSeconds
+        ? (mode === "focus" ? "Start Focus" : "Start Break")
+        : "Resume";
+
+    timeDisplay.setAttribute("aria-label",
+      `${formatTime(remainingSeconds)} remaining`);
+
+    document.title = running
+      ? `${formatTime(remainingSeconds)} — Study Sprint`
+      : "StudyPilot";
+  }
+
+  function stopInterval() {
+    if (intervalId !== null) {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+  }
+
+  function pauseTimer() {
+    if (running && endTime !== null) {
+      remainingSeconds = Math.max(
+        0,
+        Math.ceil((endTime - Date.now()) / 1000)
+      );
+    }
+
+    running = false;
+    endTime = null;
+    stopInterval();
+    render();
+  }
+
+  function startTimer() {
+    if (remainingSeconds <= 0) {
+      remainingSeconds = getDurationSeconds(mode);
+      totalSeconds = remainingSeconds;
+    }
+
+    running = true;
+    endTime = Date.now() + remainingSeconds * 1000;
+    stopInterval();
+
+    intervalId = setInterval(function () {
+      remainingSeconds = Math.max(
+        0,
+        Math.ceil((endTime - Date.now()) / 1000)
+      );
+
+      if (remainingSeconds <= 0) {
+        completeSession();
+        return;
+      }
+
+      render();
+    }, 250);
+
+    render();
+  }
+
+  function prepareSession(nextMode) {
+    mode = nextMode;
+    remainingSeconds = getDurationSeconds(mode);
+    totalSeconds = remainingSeconds;
+    endTime = null;
+    render();
+  }
+
+  function nextSession(completedNormally) {
+    if (mode === "focus") {
+      if (completedNormally) {
+        completedFocusSessions += 1;
+      }
+
+      const isLongBreak =
+        completedNormally &&
+        completedFocusSessions > 0 &&
+        completedFocusSessions % settings.cycleCount === 0;
+
+      return isLongBreak ? "longBreak" : "shortBreak";
+    }
+
+    return "focus";
+  }
+
+  function completeSession() {
+    const finishedMode = mode;
+    running = false;
+    endTime = null;
+    stopInterval();
+
+    const nextMode = nextSession(true);
+    prepareSession(nextMode);
+
+    if (finishedMode === "focus") {
+      message.textContent = nextMode === "longBreak"
+        ? "Focus session complete! Time for a long break."
+        : "Focus session complete! Time for a short break.";
+    } else {
+      message.textContent = "Break complete. Ready to focus again?";
+    }
+
+    if (settings.autoNext) {
+      startTimer();
+    } else {
+      render();
+    }
+  }
+
+  function advanceSession() {
+    const nextMode = nextSession(false);
+    pauseTimer();
+    prepareSession(nextMode);
+    message.textContent = "Session skipped. Start whenever you're ready.";
+  }
+
+  function resetTimer() {
+    pauseTimer();
+    remainingSeconds = getDurationSeconds(mode);
+    totalSeconds = remainingSeconds;
+    message.textContent = "Timer reset. Ready when you are.";
+    render();
+  }
+
+  function openSettings() {
+    focusInput.value = settings.focusMinutes;
+    shortInput.value = settings.shortBreakMinutes;
+    longInput.value = settings.longBreakMinutes;
+    cycleInput.value = String(settings.cycleCount);
+    autoInput.checked = settings.autoNext;
+    settingsError.textContent = "";
+    settingsModal.hidden = false;
+    focusInput.focus();
+  }
+
+  function closeSettings() {
+    settingsModal.hidden = true;
+    settingsError.textContent = "";
+    settingsButton.focus();
+  }
+
+  startButton.addEventListener("click", function () {
+    if (running) {
+      pauseTimer();
+      message.textContent = "Timer paused.";
+    } else {
+      startTimer();
+      message.textContent = "Your " + getModeName(mode).toLowerCase() +
+        " is in progress.";
+    }
+  });
+
+  resetButton.addEventListener("click", resetTimer);
+  skipButton.addEventListener("click", advanceSession);
+  settingsButton.addEventListener("click", openSettings);
+
+  if (settingsClose) {
+    settingsClose.addEventListener("click", closeSettings);
+  }
+
+  if (settingsCancel) {
+    settingsCancel.addEventListener("click", closeSettings);
+  }
+
+  settingsModal.addEventListener("click", function (event) {
+    if (event.target === settingsModal) {
+      closeSettings();
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && !settingsModal.hidden) {
+      closeSettings();
+    }
+  });
+
+  settingsForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const focusMinutes = Number(focusInput.value);
+    const shortBreakMinutes = Number(shortInput.value);
+    const longBreakMinutes = Number(longInput.value);
+    const cycleCount = Number(cycleInput.value);
+
+    if (
+      !Number.isInteger(focusMinutes) ||
+      focusMinutes < 1 || focusMinutes > 180 ||
+      !Number.isInteger(shortBreakMinutes) ||
+      shortBreakMinutes < 1 || shortBreakMinutes > 60 ||
+      !Number.isInteger(longBreakMinutes) ||
+      longBreakMinutes < 1 || longBreakMinutes > 120 ||
+      ![2, 3, 4, 5, 6].includes(cycleCount)
+    ) {
+      settingsError.textContent =
+        "Please enter valid durations and choose a valid cycle length.";
+      return;
+    }
+
+    settings = {
+      focusMinutes,
+      shortBreakMinutes,
+      longBreakMinutes,
+      cycleCount,
+      autoNext: autoInput.checked
+    };
+
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+    } catch (error) {
+      console.warn("Study Sprint settings could not be saved.", error);
+    }
+
+    pauseTimer();
+    remainingSeconds = getDurationSeconds(mode);
+    totalSeconds = remainingSeconds;
+    closeSettings();
+    message.textContent =
+      "Settings saved. The current session timer has been reset.";
+    render();
+  });
+
+  render();
+})();
+
+
+      
+      // Load subjects from Flask.
+      async function loadSubjects() {
+        const token = readStoredValue([
+          "studypilot_access_token",
+          "access_token",
+          "token"
+        ]);
+
+        const subjectsCount = document.getElementById("subjects-count");
+
+        try {
+          if (!token) {
+            throw new Error("Login token is missing. Please log in again.");
+          }
+
+          const response = await fetch("http://127.0.0.1:5000/api/subjects", {
+            headers: {
+              "Authorization": "Bearer " + token
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error("API returned HTTP " + response.status);
+          }
+
+          const data = await response.json();
+
+          const subjects = Array.isArray(data)
+            ? data
+            : (data.subjects || data.data || []);
+
+          if (!Array.isArray(subjects)) {
+            throw new Error("Unexpected subjects response");
+          }
+
+          subjectsCount.textContent = subjects.length;
+
+        } catch (error) {
+          subjectsCount.textContent = "—";
+          console.error("Could not load subjects:", error);
+        }
+      }
+
+      async function loadAssignments() {
+        const token = readStoredValue([
+          "studypilot_access_token",
+          "access_token",
+          "token"
+        ]);
+
+        try {
+          if (!token) {
+            throw new Error("Your login session is missing. Please log in again.");
+          }
+
+          const response = await fetch("http://127.0.0.1:5000/api/assignments", {
+            headers: { "Authorization": "Bearer " + token }
+          });
+
+          if (!response.ok) {
+            throw new Error("Assignments API returned HTTP " + response.status);
+          }
+
+          const data = await response.json();
+          const assignments = Array.isArray(data)
+            ? data
+            : (data.assignments || data.data || []);
+
+          if (!Array.isArray(assignments)) {
+            throw new Error("Unexpected assignments response");
+          }
+
+          allAssignments = assignments;
+          renderAssignments();
+        } catch (error) {
+          console.error("Could not load assignments:", error);
+
+          tasksContainer.replaceChildren();
+
+          const message = document.createElement("p");
+          message.className =
+            "rounded-xl bg-white p-5 text-sm text-on-surface-variant shadow-sm";
+          message.textContent =
+            "Could not load assignments. Check that Flask is running and you are logged in.";
+
+          tasksContainer.appendChild(message);
+          remainingBadge.textContent = "Unavailable";
+          completedCount.textContent = "—";
+          totalCount.textContent = "—";
+          completedPercentage.textContent = "—";
+          progressBar.style.width = "0%";
+          upcomingDeadlinesCount.textContent = "—";
+          
+const upcomingDeadlinesLabel = document.getElementById(
+  "upcoming-deadlines-label"
+);
+
+if (upcomingDeadlinesLabel) {
+  upcomingDeadlinesLabel.textContent = "Unavailable";
+  upcomingDeadlinesLabel.className =
+    "rounded-full bg-surface-container-low px-2 py-1 text-xs font-semibold text-on-surface-variant";
+}
+
+        }
+      }
+    
+async function loadNextExam() {
+  const titleElement = document.getElementById("next-exam-title");
+  const detailsElement = document.getElementById("next-exam-details");
+
+  const token = readStoredValue([
+    "studypilot_access_token",
+    "access_token",
+    "token"
+  ]);
+
+  try {
+    if (!token) {
+      throw new Error("Login token is missing");
+    }
+
+    const response = await fetch("http://127.0.0.1:5000/api/events", {
+      headers: {
+        "Authorization": "Bearer " + token
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Events API returned HTTP " + response.status);
+    }
+
+    const data = await response.json();
+    const events = Array.isArray(data)
+      ? data
+      : (data.events || data.data || []);
+
+    if (!Array.isArray(events)) {
+      throw new Error("Unexpected events response");
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const upcomingExams = events
+      .filter(function (event) {
+        const eventType = String(event.type || event.event_type || "")
+          .toLowerCase();
+
+        if (eventType !== "exam") return false;
+        if (!event.date) return false;
+
+        const examDate = new Date(event.date + "T00:00:00");
+        return !Number.isNaN(examDate.getTime()) && examDate >= today;
+      })
+      .sort(function (a, b) {
+        return new Date(a.date + "T00:00:00")
+          - new Date(b.date + "T00:00:00");
+      });
+
+    if (upcomingExams.length === 0) {
+      titleElement.textContent = "No upcoming exams";
+      detailsElement.textContent =
+        "Add an exam in Calendar & Exams to see it here.";
+      return;
+    }
+
+    const nextExam = upcomingExams[0];
+    const examDate = new Date(nextExam.date + "T00:00:00");
+
+    titleElement.textContent =
+      nextExam.subject || nextExam.title || "Upcoming Exam";
+
+    const formattedDate = examDate.toLocaleDateString([], {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    });
+
+    detailsElement.textContent =
+      formattedDate +
+      (nextExam.start_time ? " · " + nextExam.start_time : "");
+  } catch (error) {
+    console.error("Could not load next exam:", error);
+    titleElement.textContent = "Exam unavailable";
+    detailsElement.textContent =
+      "Check your connection and Calendar & Exams.";
+  }
+}
+
+      loadSubjects();
+      loadAssignments();
+      loadNextExam();
+
+
+    })();
+  </script>
+</body>
+</html>

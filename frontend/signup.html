@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StudyPilot - Create your account</title>
+<!-- BEGIN: Stylesheets -->
+<style data-purpose="typography">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #111827;
+      background-color: #FFFFFF;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  </style>
+<style data-purpose="layout">
+    * {
+      box-sizing: border-box;
+    }
+
+    .page-wrapper {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* Left Panel: Preview & Branding */
+    .left-panel {
+      width: 46%;
+      background-color: #F8F7FF;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 64px 72px;
+      position: relative;
+      border-right: 1px solid #ECECF9;
+    }
+
+    .brand-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background-color: #4338CA;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      flex-shrink: 0;
+      box-shadow: 0 2px 4px rgba(67, 56, 202, 0.2);
+    }
+
+    .brand-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-copy {
+      margin-top: 48px;
+      margin-bottom: 48px;
+    }
+
+    .headline {
+      font-size: 40px;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: #111827;
+      margin: 0 0 16px 0;
+    }
+
+    .subheadline {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #64748B;
+      max-width: 420px;
+      margin: 0;
+    }
+
+    /* Product Preview Card */
+    .preview-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+      padding: 24px;
+      max-width: 440px;
+      width: 100%;
+    }
+
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .preview-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      color: #111827;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #4338CA;
+    }
+
+    .badge-pill {
+      font-size: 12px;
+      font-weight: 500;
+      color: #4338CA;
+      background-color: #EEF2FF;
+      padding: 3px 10px;
+      border-radius: 9999px;
+    }
+
+    .habit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .habit-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background-color: #F8FAFC;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #1E293B;
+      transition: background-color 0.15s ease;
+    }
+
+    .habit-item-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .habit-checkbox {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1.5px solid #CBD5E1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #FFFFFF;
+      flex-shrink: 0;
+    }
+
+    .habit-checkbox.checked {
+      background-color: #4338CA;
+      border-color: #4338CA;
+      color: #FFFFFF;
+    }
+
+    .habit-time {
+      font-size: 12px;
+      color: #64748B;
+      font-weight: 500;
+    }
+
+    .preview-footer {
+      border-top: 1px solid #F1F5F9;
+      padding-top: 14px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #475569;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background-color: #EEF2FF;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 85%;
+      height: 100%;
+      background: linear-gradient(90deg, #4338CA 0%, #7C3AED 100%);
+      border-radius: 9999px;
+    }
+
+    /* Right Panel: Sign Up Form */
+    .right-panel {
+      width: 54%;
+      background-color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 32px;
+      overflow-y: auto;
+    }
+
+    .mobile-brand {
+      display: none;
+      margin-bottom: 32px;
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      color: #4338CA;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .form-heading {
+      font-size: 30px;
+      font-weight: 700;
+      color: #111827;
+      margin: 0 0 8px 0;
+      letter-spacing: -0.02em;
+    }
+
+    .form-subtext {
+      color: #64748B;
+      font-size: 15px;
+      margin: 0 0 28px 0;
+      line-height: 1.5;
+    }
+
+    /* Form Fields & Controls */
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #111827;
+      margin-bottom: 6px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 15px;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      outline: none;
+      color: #111827;
+      background-color: #FFFFFF;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .form-input:focus {
+      border-color: #4338CA;
+      box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.12);
+    }
+
+    .form-input::placeholder {
+      color: #94A3B8;
+    }
+
+    .form-input.is-invalid {
+      border-color: #EF4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .password-input {
+      padding-right: 42px;
+    }
+
+    .toggle-password-btn {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: #64748B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s ease;
+    }
+
+    .toggle-password-btn:hover {
+      color: #111827;
+    }
+
+    /* Password Strength Meter */
+    .strength-meter-wrap {
+      margin-top: 8px;
+    }
+
+    .strength-bar-container {
+      display: flex;
+      gap: 4px;
+      height: 4px;
+      margin-bottom: 6px;
+    }
+
+    .strength-bar-segment {
+      flex: 1;
+      height: 100%;
+      background-color: #E2E8F0;
+      border-radius: 2px;
+      transition: background-color 0.2s ease;
+    }
+
+    .strength-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #64748B;
+    }
+
+    .strength-level {
+      font-weight: 600;
+    }
+
+    .input-hint {
+      font-size: 12px;
+      color: #64748B;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    .error-feedback {
+      display: none;
+      font-size: 13px;
+      color: #EF4444;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    .error-feedback.visible {
+      display: block;
+    }
+
+    /* Terms Checkbox */
+    .checkbox-container {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 22px;
+      margin-bottom: 24px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-container input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    .custom-checkmark {
+      width: 18px;
+      height: 18px;
+      background-color: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: all 0.15s ease;
+    }
+
+    .checkbox-container input:checked ~ .custom-checkmark {
+      background-color: #4338CA;
+      border-color: #4338CA;
+    }
+
+    .checkbox-container input:focus ~ .custom-checkmark {
+      box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15);
+    }
+
+    .custom-checkmark svg {
+      display: none;
+    }
+
+    .checkbox-container input:checked ~ .custom-checkmark svg {
+      display: block;
+    }
+
+    .checkbox-text {
+      font-size: 14px;
+      line-height: 1.45;
+      color: #475569;
+    }
+
+    .checkbox-text a {
+      color: #4338CA;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .checkbox-text a:hover {
+      text-decoration: underline;
+    }
+
+    /* Submit Button */
+    .submit-button {
+      width: 100%;
+      background-color: #4338CA;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.15s ease, transform 0.05s ease;
+    }
+
+    .submit-button:hover {
+      background-color: #3730A3;
+    }
+
+    .submit-button:active {
+      transform: scale(0.99);
+    }
+
+    .submit-button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    /* Alert Banner */
+    .alert-banner {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .alert-banner.error {
+      display: block;
+      background-color: #FEF2F2;
+      border: 1px solid #FCA5A5;
+      color: #991B1B;
+    }
+
+    .alert-banner.success {
+      display: block;
+      background-color: #ECFDF5;
+      border: 1px solid #6EE7B7;
+      color: #065F46;
+    }
+
+    /* Form Footer */
+    .auth-footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 14px;
+      color: #64748B;
+    }
+
+    .auth-footer a {
+      color: #4338CA;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .auth-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Spinner Animation */
+    .spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #FFFFFF;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+<style data-purpose="responsive">
+    @media (max-width: 992px) {
+      .left-panel {
+        padding: 40px;
+        width: 44%;
+      }
+      .headline {
+        font-size: 32px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page-wrapper {
+        flex-direction: column;
+      }
+      .left-panel {
+        display: none;
+      }
+      .right-panel {
+        width: 100%;
+        padding: 40px 20px 48px 20px;
+        min-height: 100vh;
+        justify-content: flex-start;
+      }
+      .mobile-brand {
+        display: flex;
+        justify-content: center;
+      }
+      .form-container {
+        margin-top: 10px;
+      }
+    }
+  </style>
+<!-- END: Stylesheets -->
+</head>
+<body>
+<!-- BEGIN: PageWrapper -->
+<div class="page-wrapper" data-purpose="page-layout-root">
+<!-- BEGIN: LeftBrandPanel -->
+<section aria-label="StudyPilot Product Highlights" class="left-panel">
+<!-- Top Brand Logo -->
+<a aria-label="StudyPilot Home" class="brand-header" href="index.html">
+<div aria-hidden="true" class="brand-icon">
+<!-- Rounded Book Icon with Plus Marker Matching Login Style -->
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" viewbox="0 0 24 24" width="20">
+<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+<line x1="12" x2="12" y1="8" y2="14"></line>
+<line x1="9" x2="15" y1="11" y2="11"></line>
+</svg>
+</div>
+<span class="brand-name">StudyPilot</span>
+</a>
+<!-- Headline and Value Proposition -->
+<div class="hero-copy" data-purpose="marketing-copy">
+<h1 class="headline">Build better study habits, one day at a time.</h1>
+<p class="subheadline">Create your account and start turning your academic goals into a clear, manageable plan.</p>
+</div>
+<!-- Understated Interactive Product Preview Card -->
+<div class="preview-card" data-purpose="product-preview">
+<div class="preview-header">
+<div class="preview-title-wrap">
+<span class="status-dot"></span>
+<span>Weekly Habits</span>
+</div>
+<span class="badge-pill">Week 1</span>
+</div>
+<div class="habit-list">
+<!-- Habit Item 1 -->
+<div class="habit-item">
+<div class="habit-item-info">
+<div class="habit-checkbox checked">
+<svg fill="none" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" viewbox="0 0 24 24" width="12">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+</div>
+<span style="font-weight: 500;">Daily 45m Pomodoro Study Block</span>
+</div>
+<span class="habit-time">45m</span>
+</div>
+<!-- Habit Item 2 -->
+<div class="habit-item">
+<div class="habit-item-info">
+<div class="habit-checkbox"></div>
+<span>Review Lecture Summaries</span>
+</div>
+<span class="habit-time">30m</span>
+</div>
+<!-- Habit Item 3 -->
+<div class="habit-item">
+<div class="habit-item-info">
+<div class="habit-checkbox"></div>
+<span>Active Recall Flashcards</span>
+</div>
+<span class="habit-time">25m</span>
+</div>
+</div>
+<!-- Weekly Habit Progress Bar -->
+<div class="preview-footer">
+<div class="progress-meta">
+<span>Habit Streak Target</span>
+<span style="color: #111827;">85%</span>
+</div>
+<div aria-hidden="true" class="progress-track">
+<div class="progress-fill"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: LeftBrandPanel -->
+<!-- BEGIN: RightAuthPanel -->
+<main class="right-panel" role="main">
+<!-- Mobile Logo Header -->
+<div aria-hidden="true" class="mobile-brand">
+<a class="brand-header" href="index.html">
+<div class="brand-icon">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" viewbox="0 0 24 24" width="20">
+<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+<line x1="12" x2="12" y1="8" y2="14"></line>
+<line x1="9" x2="15" y1="11" y2="11"></line>
+</svg>
+</div>
+<span class="brand-name">StudyPilot</span>
+</a>
+</div>
+<!-- Registration Form Card -->
+<div class="form-container" data-purpose="registration-form-container">
+<span class="eyebrow">GET STARTED</span>
+<h2 class="form-heading">Create your account</h2>
+<p class="form-subtext">Start planning smarter with StudyPilot.</p>
+<!-- Dynamic Feedback Alert -->
+<div aria-live="polite" class="alert-banner" id="generalAlert" role="alert"></div>
+<form autocomplete="on" id="signupForm" novalidate="">
+<!-- Full Name Field -->
+<div class="form-group">
+<label class="form-label" for="fullName">Full name</label>
+<div class="input-wrapper">
+<input aria-describedby="fullNameError" autocomplete="name" class="form-input" id="fullName" name="fullName" placeholder="Enter your full name" required="" type="text"/>
+</div>
+<div class="error-feedback" id="fullNameError" role="alert">Please enter your full name.</div>
+</div>
+<!-- Email Address Field -->
+<div class="form-group">
+<label class="form-label" for="email">Email address</label>
+<div class="input-wrapper">
+<input aria-describedby="emailError" autocomplete="email" class="form-input" id="email" name="email" placeholder="name@university.edu" required="" type="email"/>
+</div>
+<div class="error-feedback" id="emailError" role="alert">Please enter a valid university or personal email.</div>
+</div>
+<!-- Password Field -->
+<div class="form-group">
+<label class="form-label" for="password">Password</label>
+<div class="input-wrapper">
+<input aria-describedby="passwordHint passwordError" autocomplete="new-password" class="form-input password-input" id="password" name="password" placeholder="Create a strong password" required="" type="password"/>
+<button aria-label="Show password" class="toggle-password-btn" id="togglePassword" title="Toggle password visibility" type="button">
+<!-- Eye Icon -->
+<svg fill="none" height="18" id="eyeIcon1" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18">
+<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+<circle cx="12" cy="12" r="3"></circle>
+</svg>
+<!-- Eye Off Icon (Hidden initially) -->
+<svg fill="none" height="18" id="eyeOffIcon1" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="display:none;" viewbox="0 0 24 24" width="18">
+<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+<line x1="1" x2="23" y1="1" y2="23"></line>
+</svg>
+</button>
+</div>
+<!-- Password Strength Indicator -->
+<div aria-live="polite" class="strength-meter-wrap" id="strengthMeterWrap">
+<div class="strength-bar-container">
+<div class="strength-bar-segment" id="strSegment1"></div>
+<div class="strength-bar-segment" id="strSegment2"></div>
+<div class="strength-bar-segment" id="strSegment3"></div>
+<div class="strength-bar-segment" id="strSegment4"></div>
+</div>
+<div class="strength-meta">
+<span>Password strength</span>
+<span class="strength-level" id="strengthText" style="color: #64748B;">Too short</span>
+</div>
+</div>
+<div class="input-hint" id="passwordHint">At least 8 characters with a number or symbol.</div>
+<div class="error-feedback" id="passwordError" role="alert">Password must be at least 8 characters long.</div>
+</div>
+<!-- Confirm Password Field -->
+<div class="form-group">
+<label class="form-label" for="confirmPassword">Confirm password</label>
+<div class="input-wrapper">
+<input aria-describedby="confirmPasswordError" autocomplete="new-password" class="form-input password-input" id="confirmPassword" name="confirmPassword" placeholder="Re-enter your password" required="" type="password"/>
+<button aria-label="Show confirm password" class="toggle-password-btn" id="toggleConfirmPassword" title="Toggle confirm password visibility" type="button">
+<!-- Eye Icon -->
+<svg fill="none" height="18" id="eyeIcon2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18">
+<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+<circle cx="12" cy="12" r="3"></circle>
+</svg>
+<!-- Eye Off Icon (Hidden initially) -->
+<svg fill="none" height="18" id="eyeOffIcon2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="display:none;" viewbox="0 0 24 24" width="18">
+<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+<line x1="1" x2="23" y1="1" y2="23"></line>
+</svg>
+</button>
+</div>
+<div class="error-feedback" id="confirmPasswordError" role="alert">Passwords do not match.</div>
+</div>
+<!-- Terms & Privacy Checkbox -->
+<div>
+<label class="checkbox-container">
+<input id="termsConsent" name="termsConsent" required="" type="checkbox"/>
+<span aria-hidden="true" class="custom-checkmark">
+<svg fill="none" height="11" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" viewbox="0 0 24 24" width="11">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+</span>
+<span class="checkbox-text">
+                I agree to the <a href="#terms">Terms of Service</a> and <a href="#privacy">Privacy Policy</a>.
+              </span>
+</label>
+<div class="error-feedback" id="termsError" role="alert" style="margin-top: -16px; margin-bottom: 20px;">You must accept the terms to create an account.</div>
+</div>
+<!-- Submit Button -->
+<button class="submit-button" id="submitBtn" type="submit">
+<span aria-hidden="true" class="spinner" id="btnSpinner"></span>
+<span id="btnText">Create account</span>
+</button>
+</form>
+<!-- Footer / Link to Login -->
+<footer class="auth-footer">
+          Already have an account? <a href="index.html">Sign in</a>
+</footer>
+</div>
+</main>
+<!-- END: RightAuthPanel -->
+</div>
+<!-- END: PageWrapper -->
+<!-- BEGIN: Interactive Scripts -->
+<script data-purpose="password-visibility">
+    // Helper to toggle password visibility
+    function setupPasswordToggle(inputId, toggleBtnId, eyeId, eyeOffId) {
+      const input = document.getElementById(inputId);
+      const button = document.getElementById(toggleBtnId);
+      const eye = document.getElementById(eyeId);
+      const eyeOff = document.getElementById(eyeOffId);
+
+      button.addEventListener('click', () => {
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        eye.style.display = isPassword ? 'none' : 'block';
+        eyeOff.style.display = isPassword ? 'block' : 'none';
+        button.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+      });
+    }
+
+    setupPasswordToggle('password', 'togglePassword', 'eyeIcon1', 'eyeOffIcon1');
+    setupPasswordToggle('confirmPassword', 'toggleConfirmPassword', 'eyeIcon2', 'eyeOffIcon2');
+  </script>
+<script data-purpose="password-strength">
+    const passwordInput = document.getElementById('password');
+    const strengthText = document.getElementById('strengthText');
+    const segments = [
+      document.getElementById('strSegment1'),
+      document.getElementById('strSegment2'),
+      document.getElementById('strSegment3'),
+      document.getElementById('strSegment4')
+    ];
+
+    function calculateStrength(pwd) {
+      if (!pwd) return 0;
+      let score = 0;
+      if (pwd.length >= 8) score++;
+      if (/[a-z]/.test(pwd) && /[A-Z]/.test(pwd)) score++;
+      if (/\d/.test(pwd)) score++;
+      if (/[^A-Za-z0-9]/.test(pwd)) score++;
+      return score;
+    }
+
+    function updateStrengthIndicator() {
+      const val = passwordInput.value;
+      const score = calculateStrength(val);
+
+      // Colors definitions matching spec
+      const colors = {
+        0: { color: '#E2E8F0', text: 'Too short', labelColor: '#64748B' },
+        1: { color: '#EF4444', text: 'Weak', labelColor: '#EF4444' },
+        2: { color: '#F59E0B', text: 'Fair', labelColor: '#F59E0B' },
+        3: { color: '#4338CA', text: 'Good', labelColor: '#4338CA' },
+        4: { color: '#10B981', text: 'Strong', labelColor: '#10B981' }
+      };
+
+      // Reset segments
+      segments.forEach(seg => { seg.style.backgroundColor = '#E2E8F0'; });
+
+      if (val.length === 0) {
+        strengthText.innerText = 'Too short';
+        strengthText.style.color = '#64748B';
+        return;
+      }
+
+      const current = colors[score] || colors[1];
+      strengthText.innerText = current.text;
+      strengthText.style.color = current.labelColor;
+
+      for (let i = 0; i < score; i++) {
+        segments[i].style.backgroundColor = current.color;
+      }
+    }
+
+    passwordInput.addEventListener('input', updateStrengthIndicator);
+  </script>
+<script data-purpose="form-validation-and-submission">
+    const form = document.getElementById('signupForm');
+    const fullNameInput = document.getElementById('fullName');
+    const emailInput = document.getElementById('email');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const termsConsent = document.getElementById('termsConsent');
+    const generalAlert = document.getElementById('generalAlert');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnSpinner = document.getElementById('btnSpinner');
+    const btnText = document.getElementById('btnText');
+
+    // Local Flask API. Open the frontend at http://127.0.0.1:5500
+    // so its origin matches the backend's default CORS configuration.
+    const API_BASE_URL = 'http://127.0.0.1:5000';
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function setFieldError(input, errorElementId, isError, message) {
+      const errorEl = document.getElementById(errorElementId);
+      if (!errorEl) return;
+
+      if (isError) {
+        input.classList.add('is-invalid');
+        errorEl.classList.add('visible');
+        if (message) errorEl.textContent = message;
+      } else {
+        input.classList.remove('is-invalid');
+        errorEl.classList.remove('visible');
+      }
+    }
+
+    function showAlert(type, message) {
+      generalAlert.className = `alert-banner ${type}`;
+      generalAlert.textContent = message;
+    }
+
+    function resetSubmitButton() {
+      submitBtn.disabled = false;
+      btnSpinner.style.display = 'none';
+      btnText.textContent = 'Create account';
+    }
+
+    confirmPasswordInput.addEventListener('input', () => {
+      if (confirmPasswordInput.value.length > 0) {
+        const matches = confirmPasswordInput.value === passwordInput.value;
+        setFieldError(
+          confirmPasswordInput,
+          'confirmPasswordError',
+          !matches,
+          'Passwords do not match.'
+        );
+      } else {
+        setFieldError(confirmPasswordInput, 'confirmPasswordError', false);
+      }
+    });
+
+    form.addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      let isValid = true;
+      generalAlert.className = 'alert-banner';
+      generalAlert.textContent = '';
+
+      const fullName = fullNameInput.value.trim();
+      const email = emailInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
+
+      if (!fullName) {
+        setFieldError(fullNameInput, 'fullNameError', true, 'Please enter your full name.');
+        isValid = false;
+      } else {
+        setFieldError(fullNameInput, 'fullNameError', false);
+      }
+
+      if (!email || !emailRegex.test(email)) {
+        setFieldError(emailInput, 'emailError', true, 'Please enter a valid email address.');
+        isValid = false;
+      } else {
+        setFieldError(emailInput, 'emailError', false);
+      }
+
+      if (password.length < 8) {
+        setFieldError(passwordInput, 'passwordError', true, 'Password must be at least 8 characters long.');
+        isValid = false;
+      } else {
+        setFieldError(passwordInput, 'passwordError', false);
+      }
+
+      if (!confirmPasswordInput.value || confirmPasswordInput.value !== password) {
+        setFieldError(confirmPasswordInput, 'confirmPasswordError', true, 'Passwords do not match.');
+        isValid = false;
+      } else {
+        setFieldError(confirmPasswordInput, 'confirmPasswordError', false);
+      }
+
+      const termsError = document.getElementById('termsError');
+      if (!termsConsent.checked) {
+        termsError.classList.add('visible');
+        isValid = false;
+      } else {
+        termsError.classList.remove('visible');
+      }
+
+      if (!isValid) return;
+
+      submitBtn.disabled = true;
+      btnSpinner.style.display = 'inline-block';
+      btnText.textContent = 'Creating account...';
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            full_name: fullName,
+            email: email,
+            password: password
+          })
+        });
+
+        const result = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          showAlert(
+            'error',
+            result.error || 'We could not create your account. Please try again.'
+          );
+          return;
+        }
+
+        form.reset();
+        updateStrengthIndicator();
+        setFieldError(fullNameInput, 'fullNameError', false);
+        setFieldError(emailInput, 'emailError', false);
+        setFieldError(passwordInput, 'passwordError', false);
+        setFieldError(confirmPasswordInput, 'confirmPasswordError', false);
+        termsError.classList.remove('visible');
+
+        showAlert(
+          'success',
+          'Your StudyPilot account has been created! Please sign in to continue.'
+        );
+      } catch (error) {
+        showAlert(
+          'error',
+          'Could not connect to StudyPilot. Make sure the Flask backend is running, then try again.'
+        );
+      } finally {
+        resetSubmitButton();
+      }
+    });
+
+    [fullNameInput, emailInput, passwordInput].forEach(field => {
+      field.addEventListener('input', () => {
+        if (field.classList.contains('is-invalid')) {
+          setFieldError(field, `${field.id}Error`, false);
+        }
+      });
+    });
+
+    termsConsent.addEventListener('change', () => {
+      if (termsConsent.checked) {
+        document.getElementById('termsError').classList.remove('visible');
+      }
+    });
+  </script>
+<!-- END: Interactive Scripts -->
+</body></html>

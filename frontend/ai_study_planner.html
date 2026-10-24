@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Study Planner - StudyPilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background:#F8F9FF; color:#111827; min-height:100vh; line-height:1.5; -webkit-font-smoothing:antialiased; display:flex; flex-direction:column; }
+    .top-header { background:#fff; border-bottom:1px solid #E2E8F0; padding:1rem 2rem; position:sticky; top:0; z-index:20; }
+    .header-container { max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; }
+    .brand-group { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
+    .brand-icon { width:34px; height:34px; background:#4338CA; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; }
+    .brand-icon svg { width:20px; height:20px; }
+    .brand-text { font-size:1.15rem; font-weight:700; color:#111827; letter-spacing:-.02em; }
+    .back-btn { display:inline-flex; align-items:center; gap:.5rem; padding:.55rem 1rem; border-radius:8px; font-size:.875rem; font-weight:500; color:#374151; background:#fff; border:1px solid #E2E8F0; text-decoration:none; transition:all .15s ease-in-out; }
+    .back-btn:hover { background:#EFF4FF; color:#4338CA; border-color:#C7D2FE; }
+    .back-btn svg { width:16px; height:16px; }
+    .main-wrapper { flex:1; max-width:820px; width:100%; margin:0 auto; padding:2.5rem 1.5rem 4rem; }
+    .page-intro { text-align:center; margin-bottom:2.25rem; }
+    .page-badge { display:inline-flex; align-items:center; gap:.35rem; padding:.3rem .75rem; border-radius:9999px; background:#EEF2FF; color:#4338CA; font-size:.75rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; margin-bottom:.85rem; }
+    .page-title { font-size:2rem; font-weight:700; color:#111827; letter-spacing:-.03em; margin-bottom:.5rem; }
+    .page-subtitle { font-size:1rem; color:#64748B; max-width:580px; margin:0 auto; }
+    .planner-card, .history-card { background:#fff; border-radius:12px; border:1px solid #E2E8F0; box-shadow:0 4px 6px -1px rgba(0,0,0,.04), 0 2px 4px -2px rgba(0,0,0,.03); padding:2.25rem; margin-bottom:2.25rem; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+    .col-full { grid-column:1 / -1; }
+    .form-group { display:flex; flex-direction:column; gap:.5rem; }
+    .form-label { font-size:.875rem; font-weight:600; color:#1F2937; display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
+    .form-hint { font-size:.75rem; color:#94A3B8; font-weight:400; }
+    .form-input, .form-textarea, .form-select { width:100%; padding:.75rem .95rem; border-radius:8px; border:1px solid #CBD5E1; background:#fff; font-family:inherit; font-size:.95rem; color:#111827; outline:none; transition:border-color .15s ease, box-shadow .15s ease; }
+    .form-input:focus, .form-textarea:focus, .form-select:focus { border-color:#4338CA; box-shadow:0 0 0 3px rgba(67,56,202,.15); }
+    .form-input::placeholder, .form-textarea::placeholder { color:#94A3B8; }
+    .form-textarea { resize:vertical; min-height:110px; line-height:1.5; }
+    .subject-pills { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.5rem; }
+    .subject-pill { display:inline-flex; align-items:center; gap:.35rem; padding:.35rem .75rem; border-radius:6px; font-size:.8rem; font-weight:500; background:#F1F5F9; color:#475569; border:1px solid #E2E8F0; cursor:pointer; user-select:none; transition:all .15s ease; }
+    .subject-pill:hover { background:#E2E8F0; color:#1E293B; }
+    .subject-pill.active { background:#EEF2FF; color:#4338CA; border-color:#C7D2FE; }
+    .priority-options { display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem; }
+    .priority-option { position:relative; }
+    .priority-option input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
+    .priority-card { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:.65rem .5rem; border:1px solid #CBD5E1; border-radius:8px; cursor:pointer; transition:all .15s ease; background:#fff; text-align:center; }
+    .priority-option input[type="radio"]:checked + .priority-card { border-color:#4338CA; background:#EEF2FF; box-shadow:0 0 0 1px #4338CA; }
+    .priority-label { font-size:.875rem; font-weight:600; color:#1F2937; }
+    .priority-option input[type="radio"]:checked + .priority-card .priority-label { color:#4338CA; }
+    .priority-sub { font-size:.725rem; color:#64748B; margin-top:.15rem; }
+    .form-actions { margin-top:2rem; display:flex; flex-direction:column; align-items:center; gap:.75rem; }
+    .btn-primary { width:100%; display:inline-flex; align-items:center; justify-content:center; gap:.6rem; padding:.875rem 1.75rem; border-radius:8px; font-size:1rem; font-weight:600; color:#fff; background:#4338CA; border:1px solid #3730A3; cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,.05); transition:all .15s ease-in-out; }
+    .btn-primary:hover { background:#3730A3; box-shadow:0 4px 6px -1px rgba(67,56,202,.25); }
+    .btn-primary:disabled { cursor:wait; opacity:.7; }
+    .btn-primary svg { width:18px; height:18px; }
+    .helper-notice { font-size:.8rem; color:#64748B; text-align:center; }
+    .output-section { margin-top:1rem; }
+    .section-title { font-size:1.1rem; font-weight:700; color:#111827; margin-bottom:1rem; display:flex; align-items:center; gap:.5rem; }
+    .empty-state-box { background:#fff; border:2px dashed #CBD5E1; border-radius:12px; padding:3.5rem 2rem; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .empty-icon-wrap { width:56px; height:56px; border-radius:12px; background:#EEF2FF; color:#4338CA; display:flex; align-items:center; justify-content:center; margin-bottom:1.25rem; }
+    .empty-icon-wrap svg { width:28px; height:28px; }
+    .empty-title { font-size:1.125rem; font-weight:600; color:#111827; margin-bottom:.5rem; }
+    .empty-desc { font-size:.9rem; color:#64748B; max-width:440px; line-height:1.5; }
+    .empty-features-hint { display:flex; flex-wrap:wrap; justify-content:center; gap:1.25rem; margin-top:1.75rem; padding-top:1.5rem; border-top:1px solid #F1F5F9; width:100%; max-width:500px; }
+    .hint-item { display:inline-flex; align-items:center; gap:.35rem; font-size:.8rem; color:#475569; font-weight:500; }
+    .hint-item svg { width:14px; height:14px; color:#4338CA; }
+    .history-card { padding:1.5rem; }
+    .history-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+    .history-subtitle { color:#64748B; font-size:.875rem; margin-top:.2rem; }
+    .history-list { display:grid; gap:.75rem; }
+    .history-item { border:1px solid #E2E8F0; border-radius:10px; padding:1rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+    .history-item h3 { font-size:.95rem; margin-bottom:.25rem; }
+    .history-meta { font-size:.8rem; color:#64748B; }
+    .history-actions { display:flex; gap:.5rem; flex-wrap:wrap; }
+    .btn-secondary { border:1px solid #CBD5E1; background:#fff; color:#334155; border-radius:7px; padding:.45rem .7rem; font:inherit; font-size:.8rem; cursor:pointer; }
+    .btn-secondary:hover { background:#F1F5F9; }
+    .history-empty { border:1px dashed #CBD5E1; border-radius:10px; padding:1.5rem; color:#64748B; font-size:.9rem; text-align:center; }
+    .history-status { color:#64748B; font-size:.85rem; margin-bottom:.75rem; }
+    .plan-content { white-space:pre-wrap; line-height:1.75; color:#1F2937; overflow-wrap:anywhere; }
+    @media (max-width:640px) {
+      .top-header { padding:.85rem 1rem; }
+      .main-wrapper { padding:1.75rem 1rem 3rem; }
+      .planner-card { padding:1.5rem 1.25rem; }
+      .form-grid { grid-template-columns:1fr; gap:1.25rem; }
+      .priority-options { grid-template-columns:1fr; gap:.5rem; }
+      .priority-card { flex-direction:row; justify-content:space-between; padding:.75rem 1rem; }
+      .page-title { font-size:1.6rem; }
+      .history-item { align-items:flex-start; flex-direction:column; }
+      .history-header { align-items:flex-start; flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-header">
+    <div class="header-container">
+      <div class="brand-group">
+        <div class="brand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path><line x1="10" y1="8" x2="16" y2="8"></line><line x1="10" y1="12" x2="14" y2="12"></line></svg></div>
+        <span class="brand-text">StudyPilot</span>
+      </div>
+      <a href="dashboard.html" class="back-btn" id="backToDashboardBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg><span>Back to Dashboard</span></a>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="page-intro">
+      <div class="page-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>Smart Assistant</div>
+      <h1 class="page-title">AI Study Planner</h1>
+      <p class="page-subtitle">Configure your study parameters to create a personalized, balanced schedule tailored to your syllabus velocity and upcoming exams.</p>
+    </div>
+
+    <div class="planner-card">
+      <form id="studyPlannerForm">
+        <div class="form-grid">
+          <div class="form-group col-full">
+            <label class="form-label" for="subjectInput"><span>Subjects to study</span><span class="form-hint">Type or select your enrolled courses</span></label>
+            <input type="text" id="subjectInput" class="form-input" required placeholder="e.g. Mathematics, Organic Chemistry, Data Structures" value="">
+            <div class="subject-pills" id="subjectPills" aria-live="polite"><span class="form-hint">Loading your saved subjects…</span></div>
+            <p class="form-hint" id="subjectsStatus">Subjects are loaded from your StudyPilot account.</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="dailyTime"><span>Available study time per day</span><span class="form-hint">Daily quota</span></label>
+            <select id="dailyTime" class="form-select" required>
+              <option value="1h">1 hour per day</option><option value="1.5h">1.5 hours per day</option><option value="2h" selected>2 hours per day</option><option value="3h">3 hours per day</option><option value="4h">4 hours per day</option><option value="5h+">5+ hours per day (Intensive)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="targetDate"><span>Exam date or target date</span><span class="form-hint">Milestone target</span></label>
+            <input type="date" id="targetDate" class="form-input" required>
+          </div>
+          <div class="form-group col-full">
+            <label class="form-label"><span>Priority level</span><span class="form-hint">Balancing study intensity &amp; spaced repetition</span></label>
+            <div class="priority-options">
+              <label class="priority-option"><input type="radio" name="priorityLevel" value="Low"><div class="priority-card"><span class="priority-label">Low</span><span class="priority-sub">Light steady pace</span></div></label>
+              <label class="priority-option"><input type="radio" name="priorityLevel" value="Medium" checked><div class="priority-card"><span class="priority-label">Medium</span><span class="priority-sub">Standard balanced review</span></div></label>
+              <label class="priority-option"><input type="radio" name="priorityLevel" value="High"><div class="priority-card"><span class="priority-label">High</span><span class="priority-sub">High urgency / Exam sprint</span></div></label>
+            </div>
+          </div>
+          <div class="form-group col-full">
+            <label class="form-label" for="focusTopics"><span>Topics or chapters to focus on</span><span class="form-hint">Optional specific concepts</span></label>
+            <textarea id="focusTopics" class="form-textarea" placeholder="e.g. Chapter 3: Chemical Bonding, Molecular Orbitals, Calculus Differential Equations Problem Set 4..."></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary" id="generatePlanBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg><span>Generate Study Plan</span></button>
+          <p class="helper-notice" id="apiNotice">Your plan is generated through the StudyPilot backend.</p>
+        </div>
+      </form>
+    </div>
+
+    <div class="output-section">
+      <h2 class="section-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4338CA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>Generated Study Schedule</h2>
+      <div class="empty-state-box" id="planOutputPlaceholder">
+        <div class="empty-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div>
+        <h3 class="empty-title">Your study plan will appear here</h3>
+        <p class="empty-desc">Complete the configuration form above and click "Generate Study Plan". Your draft schedule will be based on your subjects, available time, target date, and priority.</p>
+        <div class="empty-features-hint"><div class="hint-item">✓ Daily Session Breakdown</div><div class="hint-item">✓ Cognitive Load Optimization</div><div class="hint-item">✓ Milestone Benchmarks</div></div>
+      </div>
+    </div>
+
+    <!-- New: History section. Requires the backend history endpoints to persist across refreshes. -->
+    <section class="history-card" id="planHistorySection" aria-labelledby="historyTitle">
+      <div class="history-header">
+        <div><h2 class="section-title" id="historyTitle" style="margin-bottom:0">Study Plan History</h2><p class="history-subtitle">Your saved AI-generated plans</p></div>
+        <button type="button" class="btn-secondary" id="refreshHistoryBtn">Refresh history</button>
+      </div>
+      <p class="history-status" id="historyStatus" aria-live="polite">Loading your saved plans…</p>
+      <div class="history-list" id="historyList"><div class="history-empty">Your saved plans will appear here.</div></div>
+    </section>
+  </main>
+
+  <script>
+    // Change this if your Flask backend runs at a different address.
+    const API_BASE = (window.STUDYPILOT_API_BASE || 'http://127.0.0.1:5000').replace(/\/$/, '');
+    const plannerForm = document.getElementById('studyPlannerForm');
+    const subjectInput = document.getElementById('subjectInput');
+    const dateInput = document.getElementById('targetDate');
+    const output = document.getElementById('planOutputPlaceholder');
+    const notice = document.getElementById('apiNotice');
+    const subjectPills = document.getElementById('subjectPills');
+    const subjectsStatus = document.getElementById('subjectsStatus');
+    const generateButton = document.getElementById('generatePlanBtn');
+    const historyList = document.getElementById('historyList');
+    const historyStatus = document.getElementById('historyStatus');
+    const refreshHistoryBtn = document.getElementById('refreshHistoryBtn');
+
+    let availableSubjects = [];
+
+    function getAccessToken() {
+      const keys = ['studypilot_access_token', 'access_token', 'accessToken', 'jwt_token', 'token'];
+      for (const key of keys) {
+        const value = localStorage.getItem(key) || sessionStorage.getItem(key);
+        if (value) return value;
+      }
+      return null;
+    }
+
+    function authHeaders(json = false) {
+      const headers = {};
+      const token = getAccessToken();
+      if (token) headers.Authorization = `Bearer ${token}`;
+      if (json) headers['Content-Type'] = 'application/json';
+      return headers;
+    }
+
+    function setNotice(message, isError = false) {
+      notice.textContent = message;
+      notice.style.color = isError ? '#B91C1C' : '#4338CA';
+      notice.style.fontWeight = '500';
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const toDateInputValue = date => {
+      const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      return localDate.toISOString().slice(0, 10);
+    };
+    dateInput.min = toDateInputValue(today);
+    const defaultTarget = new Date(today);
+    defaultTarget.setDate(defaultTarget.getDate() + 14);
+    dateInput.value = toDateInputValue(defaultTarget);
+
+    function getSubjects() {
+      return subjectInput.value.split(',').map(s => s.trim()).filter(Boolean);
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[char]);
+    }
+
+    function renderSubjectPills() {
+      subjectPills.innerHTML = '';
+      if (!availableSubjects.length) {
+        subjectPills.innerHTML = '<span class="form-hint">No saved subjects found. Add subjects in My Subjects &amp; Syllabus first.</span>';
+        return;
+      }
+      availableSubjects.forEach(subject => {
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = 'subject-pill';
+        pill.textContent = '+ ' + subject.name;
+        pill.setAttribute('aria-pressed', 'false');
+        pill.addEventListener('click', () => {
+          const current = getSubjects();
+          const index = current.findIndex(name => name.toLowerCase() === subject.name.toLowerCase());
+          if (index >= 0) current.splice(index, 1);
+          else current.push(subject.name);
+          subjectInput.value = current.join(', ');
+          updatePillStates();
+        });
+        subjectPills.appendChild(pill);
+      });
+      updatePillStates();
+    }
+
+    function updatePillStates() {
+      const selected = getSubjects().map(s => s.toLowerCase());
+      subjectPills.querySelectorAll('.subject-pill').forEach(pill => {
+        const name = pill.textContent.replace(/^[+✓]\s*/, '');
+        const active = selected.includes(name.toLowerCase());
+        pill.classList.toggle('active', active);
+        pill.textContent = (active ? '✓ ' : '+ ') + name;
+        pill.setAttribute('aria-pressed', String(active));
+      });
+    }
+
+    subjectInput.addEventListener('input', updatePillStates);
+
+    async function loadSubjects() {
+      if (!getAccessToken()) {
+        availableSubjects = [];
+        renderSubjectPills();
+        subjectsStatus.textContent = 'Please log in first. Your login token was not found in browser storage.';
+        setNotice('Login is required to load your saved subjects.', true);
+        return;
+      }
+      try {
+        const response = await fetch(`${API_BASE}/api/subjects`, { headers: authHeaders() });
+        const data = await response.json().catch(() => ({}));
+        if (response.status === 401 || response.status === 422) throw new Error('Your login session is missing or expired. Please log in again.');
+        if (!response.ok) throw new Error(data.error || data.msg || 'Could not load your subjects.');
+        availableSubjects = Array.isArray(data.subjects) ? data.subjects : [];
+        renderSubjectPills();
+        subjectsStatus.textContent = availableSubjects.length
+          ? `${availableSubjects.length} subject(s) loaded from your account. Click a subject to add or remove it.`
+          : 'No saved subjects yet. Add subjects in My Subjects & Syllabus first.';
+        if (availableSubjects.length) {
+          subjectInput.value = availableSubjects.map(s => s.name).filter(Boolean).join(', ');
+          updatePillStates();
+          setNotice('Your saved subjects are ready. Generate a plan when you are ready.');
+        }
+      } catch (error) {
+        availableSubjects = [];
+        renderSubjectPills();
+        subjectsStatus.textContent = error.message;
+        setNotice(error.message, true);
+      }
+    }
+
+    function formatDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return String(value || 'Unknown date');
+      return date.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric', year:'numeric' });
+    }
+
+    function showPlan(plan, meta) {
+      output.className = '';
+      output.style.cssText = 'background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:1.5rem;text-align:left;display:block;';
+      output.innerHTML = `
+        <div style="display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:1.25rem">
+          <div style="background:#EEF2FF;border-radius:8px;padding:.75rem 1rem;flex:1;min-width:120px"><div style="font-size:.75rem;color:#64748B">Subjects</div><strong>${meta.subjects.length}</strong></div>
+          <div style="background:#EEF2FF;border-radius:8px;padding:.75rem 1rem;flex:1;min-width:120px"><div style="font-size:.75rem;color:#64748B">Daily availability</div><strong>${escapeHtml(meta.dailyHours)} hour(s)</strong></div>
+          <div style="background:#EEF2FF;border-radius:8px;padding:.75rem 1rem;flex:1;min-width:120px"><div style="font-size:.75rem;color:#64748B">Target date</div><strong>${escapeHtml(formatDate(meta.target))}</strong></div>
+        </div>
+        <p style="color:#64748B;font-size:.9rem;margin-bottom:1rem">AI-generated plan · ${escapeHtml(meta.priority)} priority</p>
+        <div id="generatedPlanText" class="plan-content"></div>`;
+      document.getElementById('generatedPlanText').textContent = plan;
+    }
+
+    async function loadPlanHistory() {
+      if (!getAccessToken()) {
+        historyStatus.textContent = 'Please log in to view your saved plans.';
+        historyList.innerHTML = '<div class="history-empty">Your login session was not found.</div>';
+        return;
+      }
+      historyStatus.textContent = 'Loading your saved plans…';
+      try {
+        const response = await fetch(`${API_BASE}/api/ai/study-plans`, { headers: authHeaders() });
+        const data = await response.json().catch(() => ({}));
+        if (response.status === 401 || response.status === 422) throw new Error('Your login session is missing or expired. Please log in again.');
+        if (!response.ok) throw new Error(data.error || data.msg || 'Could not load study plan history.');
+        const plans = Array.isArray(data.study_plans) ? data.study_plans : [];
+        historyList.innerHTML = '';
+        if (!plans.length) {
+          historyList.innerHTML = '<div class="history-empty">No saved plans yet. Generate your first plan and it will appear here.</div>';
+        } else {
+          plans.forEach(item => {
+            const card = document.createElement('article');
+            card.className = 'history-item';
+            const info = document.createElement('div');
+            const title = document.createElement('h3');
+            title.textContent = item.title || (Array.isArray(item.subjects) ? item.subjects.join(', ') : 'Study plan');
+            const meta = document.createElement('p');
+            meta.className = 'history-meta';
+            meta.textContent = `Created ${formatDate(item.created_at)} · Target ${formatDate(item.target_date)} · ${item.priority || 'Medium'} priority`;
+            info.append(title, meta);
+            const actions = document.createElement('div');
+            actions.className = 'history-actions';
+            const viewButton = document.createElement('button');
+            viewButton.type = 'button';
+            viewButton.className = 'btn-secondary';
+            viewButton.textContent = 'View plan';
+            viewButton.addEventListener('click', () => {
+              showPlan(item.plan, {
+                subjects: Array.isArray(item.subjects) ? item.subjects : [],
+                dailyHours: item.daily_hours || '—',
+                target: item.target_date || item.created_at,
+                priority: item.priority || 'Medium'
+              });
+              document.querySelector('.output-section').scrollIntoView({ behavior:'smooth', block:'start' });
+            });
+            actions.appendChild(viewButton);
+            card.append(info, actions);
+            historyList.appendChild(card);
+          });
+        }
+        historyStatus.textContent = `${plans.length} saved plan(s).`;
+      } catch (error) {
+        historyStatus.textContent = error.message;
+        historyList.innerHTML = '<div class="history-empty">History could not be loaded. Check that Flask is running and the /api/ai/study-plans endpoint is available.</div>';
+      }
+    }
+
+    refreshHistoryBtn.addEventListener('click', loadPlanHistory);
+
+    plannerForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      const subjects = getSubjects();
+      const targetValue = dateInput.value;
+      const target = new Date(targetValue + 'T00:00:00');
+      const priority = document.querySelector('input[name="priorityLevel"]:checked')?.value || 'Medium';
+      const topics = document.getElementById('focusTopics').value.trim();
+      const timeValue = document.getElementById('dailyTime').value;
+      const dailyHours = timeValue === '1h' ? 1 : timeValue === '1.5h' ? 1.5 : timeValue === '2h' ? 2 : timeValue === '3h' ? 3 : timeValue === '4h' ? 4 : 5;
+
+      if (!getAccessToken()) { setNotice('Please log in first. Your login token was not found.', true); return; }
+      if (!subjects.length) {
+        subjectInput.setCustomValidity('Select or enter at least one subject.');
+        subjectInput.reportValidity();
+        subjectInput.setCustomValidity('');
+        return;
+      }
+      if (!targetValue || Number.isNaN(target.getTime()) || target < today) {
+        dateInput.setCustomValidity('Choose today or a future target date.');
+        dateInput.reportValidity();
+        dateInput.setCustomValidity('');
+        return;
+      }
+
+      generateButton.disabled = true;
+      generateButton.querySelector('span').textContent = 'Generating your plan…';
+      setNotice('Contacting StudyPilot and Gemini. This may take a few seconds.');
+      output.className = 'empty-state-box';
+      output.style.cssText = '';
+      output.innerHTML = '<h3 class="empty-title">Generating your study plan…</h3><p class="empty-desc">Your selected subjects and preferences are being sent to the backend.</p>';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/ai/study-plan`, {
+          method:'POST', headers:authHeaders(true),
+          body:JSON.stringify({ subjects, daily_hours:dailyHours, target_date:targetValue, priority, topics })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (response.status === 401 || response.status === 422) throw new Error('Your login session is missing or expired. Please log in again.');
+        if (!response.ok) throw new Error(data.error || data.msg || 'The study plan could not be generated.');
+        const plan = data.plan || data.reply || data.study_plan;
+        if (!plan) throw new Error('The server responded, but no plan text was returned.');
+        showPlan(plan, { subjects, dailyHours, target, priority });
+        // The backend saves the plan inside POST /api/ai/study-plan.
+        // Do not POST it a second time to a separate history endpoint.
+        setNotice('Your AI study plan was generated and saved. Refreshing history…');
+        await loadPlanHistory();
+        setNotice('Your AI study plan was generated and saved to history.');
+      } catch (error) {
+        output.className = 'empty-state-box';
+        output.style.cssText = '';
+        output.innerHTML = `<h3 class="empty-title">We couldn't generate the plan</h3><p class="empty-desc">${escapeHtml(error.message)}<br><br>Check that Flask is running at ${escapeHtml(API_BASE)} and that its /api/ai/study-plan endpoint exists.</p>`;
+        setNotice(error.message, true);
+      } finally {
+        generateButton.disabled = false;
+        generateButton.querySelector('span').textContent = 'Generate Study Plan';
+      }
+    });
+
+    loadSubjects();
+    loadPlanHistory();
+  </script>
+</body>
+</html>
