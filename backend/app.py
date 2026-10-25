@@ -1,5 +1,4 @@
 import os
-
 from datetime import datetime, date, timedelta, timezone
 
 from dotenv import load_dotenv
@@ -32,26 +31,36 @@ if database_url:
     app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "pool_pre_ping": True,
+    "pool_recycle": 300,
+    "pool_size": 5,
+    "max_overflow": 2,
+}
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=12)
-
 
 frontend_url = os.getenv(
     "FRONTEND_URL",
     "https://studypilottt.netlify.app"
 ).strip().rstrip("/")
 
+# Allow the configured frontend and the current production frontend URL.
+allowed_origins = list(dict.fromkeys([
+    frontend_url,
+    "https://studypilottt.netlify.app",
+]))
+
 CORS(
     app,
     resources={
         r"/api/*": {
-            "origins": [frontend_url],
+            "origins": allowed_origins,
             "allow_headers": ["Content-Type", "Authorization"],
             "methods": ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
         }
     },
 )
-
 
 db = SQLAlchemy()
 bcrypt = Bcrypt(app)
@@ -294,6 +303,7 @@ class Assignment(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=current_utc)
     completed_at = db.Column(db.DateTime, nullable=True)
 
+
 class CalendarEvent(db.Model):
     __tablename__ = "calendar_events"
 
@@ -322,15 +332,20 @@ def serialize_calendar_event(event):
     }
 
 
-# Add these routes in app.py after the model definitions and before the RUN SERVER section.
+# --------------------------------------------------
+# CALENDAR EVENTS API
+# --------------------------------------------------
+
 @app.route("/api/events", methods=["GET"])
 @jwt_required()
 def get_calendar_events():
     user_id = get_current_user_id()
-    items = (CalendarEvent.query
-             .filter_by(user_id=user_id)
-             .order_by(CalendarEvent.event_date.asc(), CalendarEvent.start_time.asc())
-             .all())
+    items = (
+        CalendarEvent.query
+        .filter_by(user_id=user_id)
+        .order_by(CalendarEvent.event_date.asc(), CalendarEvent.start_time.asc())
+        .all()
+    )
     return jsonify({"events": [serialize_calendar_event(item) for item in items]})
 
 
@@ -360,9 +375,13 @@ def create_calendar_event():
                 return error_response("Times must use HH:MM 24-hour format.")
 
     event = CalendarEvent(
-        user_id=get_current_user_id(), title=title[:200], event_type=event_type,
+        user_id=get_current_user_id(),
+        title=title[:200],
+        event_type=event_type,
         subject=str(body.get("subject", "") or "").strip()[:120],
-        event_date=event_date, start_time=start_time, end_time=end_time,
+        event_date=event_date,
+        start_time=start_time,
+        end_time=end_time,
         location=str(body.get("location", "") or "").strip()[:250],
     )
     try:
@@ -370,6 +389,7 @@ def create_calendar_event():
         db.session.commit()
     except SQLAlchemyError:
         db.session.rollback()
+        app.logger.exception("Calendar event creation failed")
         return error_response("Could not save the calendar event.", 500)
     return jsonify({"event": serialize_calendar_event(event)}), 201
 
@@ -415,6 +435,7 @@ def update_calendar_event(event_id):
         db.session.commit()
     except SQLAlchemyError:
         db.session.rollback()
+        app.logger.exception("Calendar event update failed")
         return error_response("Could not update the calendar event.", 500)
     return jsonify({"event": serialize_calendar_event(event)})
 
@@ -432,8 +453,11 @@ def delete_calendar_event(event_id):
         db.session.commit()
     except SQLAlchemyError:
         db.session.rollback()
+        app.logger.exception("Calendar event deletion failed")
         return error_response("Could not delete the calendar event.", 500)
     return jsonify({"message": "Calendar event deleted."})
+
+
 class StudyLog(db.Model):
     __tablename__ = "study_logs"
 
@@ -783,66 +807,41 @@ def update_subject(subject_id):
         app.logger.exception("Subject update failed")
         return error_response("Could not update subject.", 500)
 
+
 @app.route("/api/subjects/<int:subject_id>", methods=["DELETE"])
 @jwt_required()
 def delete_subject(subject_id):
     user_id = get_current_user_id()
-
-    # Only allow users to delete their own subjects.
-    subject = Subject.query.filter_by(
-        id=subject_id,
-        user_id=user_id
-    ).first()
-
+    subject = Subject.query.filter_by(id=subject_id, user_id=user_id).first()
     if not subject:
         return error_response("Subject not found.", 404)
 
     try:
-        # Keep assignments, but disconnect them from this subject.
         Assignment.query.filter_by(
-            subject_id=subject.id,
-            user_id=user_id
-        ).update(
-            {"subject_id": None},
-            synchronize_session=False
-        )
+            subject_id=subject.id, user_id=user_id
+        ).update({"subject_id": None}, synchronize_session=False)
 
-        # Keep study sessions, but disconnect them from this subject.
         StudySession.query.filter_by(
-            subject_id=subject.id,
-            user_id=user_id
-        ).update(
-            {"subject_id": None},
-            synchronize_session=False
-        )
+            subject_id=subject.id, user_id=user_id
+        ).update({"subject_id": None}, synchronize_session=False)
 
-        # Find the subject's chapters.
         chapter_ids = [
             chapter_id
-            for (chapter_id,) in db.session.query(
-                SyllabusChapter.id
-            ).filter_by(subject_id=subject.id).all()
+            for (chapter_id,) in db.session.query(SyllabusChapter.id)
+            .filter_by(subject_id=subject.id).all()
         ]
 
-        # Delete the topics belonging to those chapters first.
         if chapter_ids:
             SyllabusTopic.query.filter(
                 SyllabusTopic.chapter_id.in_(chapter_ids)
             ).delete(synchronize_session=False)
 
-        # Then delete the chapters.
-        SyllabusChapter.query.filter_by(
-            subject_id=subject.id
-        ).delete(synchronize_session=False)
-
-        # Finally, delete the subject itself.
+        SyllabusChapter.query.filter_by(subject_id=subject.id).delete(
+            synchronize_session=False
+        )
         db.session.delete(subject)
         db.session.commit()
-
-        return jsonify({
-            "message": "Subject deleted successfully."
-        }), 200
-
+        return jsonify({"message": "Subject deleted successfully."}), 200
     except SQLAlchemyError:
         db.session.rollback()
         app.logger.exception("Subject deletion failed")
@@ -941,7 +940,6 @@ def delete_syllabus_chapter(chapter_id):
 
     subject_id = chapter.subject_id
     try:
-        # Delete child topics explicitly so deletion works consistently across DB setups.
         SyllabusTopic.query.filter_by(chapter_id=chapter.id).delete(
             synchronize_session=False
         )
@@ -1351,11 +1349,6 @@ def create_study_log():
 
 
 # --------------------------------------------------
-# AI STUDY PLANNER API
-# --------------------------------------------------
-
-
-# --------------------------------------------------
 # AI STUDY PLANNER API — GROQ
 # --------------------------------------------------
 
@@ -1394,58 +1387,37 @@ def generate_ai_study_plan():
         return error_response("Daily study hours must be a number.")
 
     if not 0.5 <= daily_hours <= 12:
-        return error_response(
-            "Daily study hours must be between 0.5 and 12."
-        )
+        return error_response("Daily study hours must be between 0.5 and 12.")
 
     target_date_value = data.get("target_date", "")
-
     if not isinstance(target_date_value, str):
-        return error_response(
-            "Enter a valid target date in YYYY-MM-DD format."
-        )
+        return error_response("Enter a valid target date in YYYY-MM-DD format.")
 
     try:
         target = date.fromisoformat(target_date_value.strip())
     except (ValueError, TypeError):
-        return error_response(
-            "Enter a valid target date in YYYY-MM-DD format."
-        )
+        return error_response("Enter a valid target date in YYYY-MM-DD format.")
 
     if target < current_utc().date():
         return error_response("Target date cannot be in the past.")
 
     priority = str(data.get("priority", "Medium")).strip()
-
     if priority not in {"Low", "Medium", "High"}:
         return error_response("Priority must be Low, Medium, or High.")
 
     topics_value = data.get("topics", "")
-    topics = (
-        str(topics_value).strip()[:4000]
-        if topics_value is not None
-        else ""
-    )
-
+    topics = str(topics_value).strip()[:4000] if topics_value is not None else ""
     user_id = get_current_user_id()
 
-    # Only use subjects saved to this authenticated user's account.
     saved_subjects = (
         Subject.query.filter_by(user_id=user_id)
         .order_by(Subject.name.asc())
         .all()
     )
-
-    saved_by_lower_name = {
-        subject.name.casefold(): subject.name
-        for subject in saved_subjects
-    }
-
+    saved_by_lower_name = {subject.name.casefold(): subject.name for subject in saved_subjects}
     selected_subjects = []
-
     for requested in requested_subjects:
         saved_name = saved_by_lower_name.get(requested.casefold())
-
         if saved_name and saved_name not in selected_subjects:
             selected_subjects.append(saved_name)
 
@@ -1455,33 +1427,25 @@ def generate_ai_study_plan():
             "Add subjects in My Subjects & Syllabus and try again."
         )
 
-    days_remaining = max(
-        1, (target - current_utc().date()).days
-    )
-
+    days_remaining = max(1, (target - current_utc().date()).days)
     context = {
         "subjects": selected_subjects,
         "daily_available_hours": daily_hours,
         "target_date": target.isoformat(),
         "days_until_target": days_remaining,
         "priority": priority,
-        "topics_to_focus_on": (
-            topics
-            or "No specific topics supplied; suggest a sensible progression."
-        ),
+        "topics_to_focus_on": topics or "No specific topics supplied; suggest a sensible progression.",
     }
 
     prompt = (
-        "Create a realistic, actionable study plan for the student's "
-        "saved subjects and preferences below.\n\n"
+        "Create a realistic, actionable study plan for the student's saved subjects and preferences below.\n\n"
         "Requirements:\n"
         "- Use clear headings and a practical day-by-day schedule.\n"
         "- Include subjects, topics or tasks, durations, and short breaks.\n"
         "- Include revision, practice questions, and milestone checkpoints.\n"
         "- Keep total planned study time within the daily available hours.\n"
         "- Respect the target date and priority level.\n"
-        "- If the target is far away, provide a weekly structure and the "
-        "first 14 days in detail.\n"
+        "- If the target is far away, provide a weekly structure and the first 14 days in detail.\n"
         "- Do not include subjects outside the supplied subject list.\n"
         "- Do not claim sessions were added to the student's calendar.\n"
         "- Use readable plain text with headings.\n\n"
@@ -1492,7 +1456,6 @@ def generate_ai_study_plan():
         from groq import Groq
 
         client = Groq(api_key=api_key)
-
         response = client.chat.completions.create(
             model=model_name,
             messages=[
@@ -1500,36 +1463,24 @@ def generate_ai_study_plan():
                     "role": "system",
                     "content": (
                         "You are StudyPilot's AI Study Planner. "
-                        "Create clear, practical, personalized study "
-                        "schedules. Follow the student's constraints."
+                        "Create clear, practical, personalized study schedules. "
+                        "Follow the student's constraints."
                     ),
                 },
-                {
-                    "role": "user",
-                    "content": prompt,
-                },
+                {"role": "user", "content": prompt},
             ],
         )
-
-        plan_text = (
-            response.choices[0].message.content or ""
-        ).strip()
+        plan_text = (response.choices[0].message.content or "").strip()
 
         if not plan_text:
-            return error_response(
-                "Groq returned an empty study plan. Please try again.",
-                502,
-            )
-
+            return error_response("Groq returned an empty study plan. Please try again.", 502)
     except Exception:
         app.logger.exception("Groq study plan generation failed")
         return error_response(
-            "The AI provider could not generate a study plan. "
-            "Check the server logs and Groq model configuration.",
+            "The AI provider could not generate a study plan. Check server logs and Groq model configuration.",
             502,
         )
 
-    # Save the generated plan using the existing database model.
     try:
         saved_plan = AIStudyPlan(
             user_id=user_id,
@@ -1540,7 +1491,6 @@ def generate_ai_study_plan():
             daily_hours=daily_hours,
             target_date=target,
         )
-
         db.session.add(saved_plan)
         db.session.commit()
 
@@ -1554,7 +1504,6 @@ def generate_ai_study_plan():
             "daily_hours": daily_hours,
             "created_at": saved_plan.created_at.isoformat() + "Z",
         }), 201
-
     except SQLAlchemyError:
         db.session.rollback()
         app.logger.exception("Saving AI study plan failed")
@@ -1563,6 +1512,42 @@ def generate_ai_study_plan():
             500,
         )
 
+
+# --------------------------------------------------
+# AI STUDY PLAN HISTORY API
+# --------------------------------------------------
+
+@app.route("/api/ai/study-plans", methods=["GET"])
+@jwt_required()
+def get_saved_ai_study_plans():
+    """Return saved study plans belonging only to the authenticated user."""
+    try:
+        plans = (
+            AIStudyPlan.query
+            .filter_by(user_id=get_current_user_id())
+            .order_by(AIStudyPlan.created_at.desc(), AIStudyPlan.id.desc())
+            .all()
+        )
+
+        return jsonify({
+            "study_plans": [
+                {
+                    "id": item.id,
+                    "title": item.title,
+                    "subjects": item.subjects.split(", ") if item.subjects else [],
+                    "plan": item.plan,
+                    "priority": item.priority,
+                    "daily_hours": item.daily_hours,
+                    "target_date": item.target_date.isoformat(),
+                    "created_at": item.created_at.isoformat() + "Z",
+                }
+                for item in plans
+            ]
+        })
+    except SQLAlchemyError:
+        db.session.rollback()
+        app.logger.exception("Loading AI study plan history failed")
+        return error_response("Could not load study plan history from the database.", 500)
 
 
 # --------------------------------------------------
