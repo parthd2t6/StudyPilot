@@ -1354,26 +1354,37 @@ def create_study_log():
 # AI STUDY PLANNER API
 # --------------------------------------------------
 
+
+# --------------------------------------------------
+# AI STUDY PLANNER API — GROQ
+# --------------------------------------------------
+
 @app.route("/api/ai/study-plan", methods=["POST"])
 @jwt_required()
 def generate_ai_study_plan():
-    """Generate a plan with Gemini and persist it for the current user."""
-    api_key = os.getenv("GEMINI_API_KEY")
+    """Generate a study plan using Groq and save it for the current user."""
+
+    api_key = os.getenv("GROQ_API_KEY")
+    model_name = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
+
     if not api_key:
         return error_response(
-            "Gemini is not configured on the server. Check GEMINI_API_KEY in .env.",
+            "Groq is not configured. Set GROQ_API_KEY in the server environment.",
             503,
         )
 
     data = get_json_body()
     requested_subjects = data.get("subjects", [])
+
     if not isinstance(requested_subjects, list):
         return error_response("Subjects must be sent as a list.")
 
     requested_subjects = [
-        item.strip() for item in requested_subjects
+        item.strip()
+        for item in requested_subjects
         if isinstance(item, str) and item.strip()
     ]
+
     if not requested_subjects:
         return error_response("Select at least one subject.")
 
@@ -1381,79 +1392,145 @@ def generate_ai_study_plan():
         daily_hours = float(data.get("daily_hours", 2))
     except (TypeError, ValueError):
         return error_response("Daily study hours must be a number.")
+
     if not 0.5 <= daily_hours <= 12:
-        return error_response("Daily study hours must be between 0.5 and 12.")
+        return error_response(
+            "Daily study hours must be between 0.5 and 12."
+        )
 
     target_date_value = data.get("target_date", "")
+
     if not isinstance(target_date_value, str):
-        return error_response("Enter a valid target date in YYYY-MM-DD format.")
+        return error_response(
+            "Enter a valid target date in YYYY-MM-DD format."
+        )
+
     try:
         target = date.fromisoformat(target_date_value.strip())
     except (ValueError, TypeError):
-        return error_response("Enter a valid target date in YYYY-MM-DD format.")
+        return error_response(
+            "Enter a valid target date in YYYY-MM-DD format."
+        )
+
     if target < current_utc().date():
         return error_response("Target date cannot be in the past.")
 
     priority = str(data.get("priority", "Medium")).strip()
+
     if priority not in {"Low", "Medium", "High"}:
         return error_response("Priority must be Low, Medium, or High.")
+
     topics_value = data.get("topics", "")
-    topics = str(topics_value).strip()[:4000] if topics_value is not None else ""
+    topics = (
+        str(topics_value).strip()[:4000]
+        if topics_value is not None
+        else ""
+    )
+
     user_id = get_current_user_id()
 
+    # Only use subjects saved to this authenticated user's account.
     saved_subjects = (
         Subject.query.filter_by(user_id=user_id)
-        .order_by(Subject.name.asc()).all()
+        .order_by(Subject.name.asc())
+        .all()
     )
+
     saved_by_lower_name = {
-        subject.name.casefold(): subject.name for subject in saved_subjects
+        subject.name.casefold(): subject.name
+        for subject in saved_subjects
     }
+
     selected_subjects = []
+
     for requested in requested_subjects:
         saved_name = saved_by_lower_name.get(requested.casefold())
+
         if saved_name and saved_name not in selected_subjects:
             selected_subjects.append(saved_name)
+
     if not selected_subjects:
         return error_response(
             "None of the selected subjects matched your saved subjects. "
             "Add subjects in My Subjects & Syllabus and try again."
         )
 
-    days_remaining = max(1, (target - current_utc().date()).days)
+    days_remaining = max(
+        1, (target - current_utc().date()).days
+    )
+
     context = {
         "subjects": selected_subjects,
         "daily_available_hours": daily_hours,
         "target_date": target.isoformat(),
         "days_until_target": days_remaining,
         "priority": priority,
-        "topics_to_focus_on": topics or "No specific topics supplied; suggest a sensible progression.",
+        "topics_to_focus_on": (
+            topics
+            or "No specific topics supplied; suggest a sensible progression."
+        ),
     }
+
     prompt = (
-        "You are StudyPilot's AI Study Planner. Create a realistic, actionable study plan "
-        "for the authenticated student's saved subjects and preferences below. "
-        "Use clear headings and a day-by-day schedule with subject, topic/task, duration, "
-        "short breaks where appropriate, review/practice, and milestone checkpoints. "
-        "Keep the total planned study time per day within the stated available hours. "
-        "Respect the target date and priority. If the target is far away, provide a useful "
-        "weekly structure and the first 14 days in detail. Do not claim that sessions were "
-        "saved to a calendar. Do not include subjects that are not in the supplied list.\n\n"
-        f"Student planning preferences (JSON): {context}"
+        "Create a realistic, actionable study plan for the student's "
+        "saved subjects and preferences below.\n\n"
+        "Requirements:\n"
+        "- Use clear headings and a practical day-by-day schedule.\n"
+        "- Include subjects, topics or tasks, durations, and short breaks.\n"
+        "- Include revision, practice questions, and milestone checkpoints.\n"
+        "- Keep total planned study time within the daily available hours.\n"
+        "- Respect the target date and priority level.\n"
+        "- If the target is far away, provide a weekly structure and the "
+        "first 14 days in detail.\n"
+        "- Do not include subjects outside the supplied subject list.\n"
+        "- Do not claim sessions were added to the student's calendar.\n"
+        "- Use readable plain text with headings.\n\n"
+        f"Student preferences:\n{context}"
     )
 
     try:
-        from google import genai
+        from groq import Groq
 
-        client = genai.Client(api_key=api_key)
-        response = client.models.generate_content(
-            model=os.getenv("GEMINI_MODEL", "gemini-flash-latest"),
-            contents=prompt,
+        client = Groq(api_key=api_key)
+
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are StudyPilot's AI Study Planner. "
+                        "Create clear, practical, personalized study "
+                        "schedules. Follow the student's constraints."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": prompt,
+                },
+            ],
         )
-        plan_text = (response.text or "").strip()
+
+        plan_text = (
+            response.choices[0].message.content or ""
+        ).strip()
+
         if not plan_text:
             return error_response(
-                "Gemini returned an empty study plan. Please try again.", 502
+                "Groq returned an empty study plan. Please try again.",
+                502,
             )
 
+    except Exception:
+        app.logger.exception("Groq study plan generation failed")
+        return error_response(
+            "The AI provider could not generate a study plan. "
+            "Check the server logs and Groq model configuration.",
+            502,
+        )
+
+    # Save the generated plan using the existing database model.
+    try:
         saved_plan = AIStudyPlan(
             user_id=user_id,
             title=f"Study Plan - {target.strftime('%d %b %Y')}",
@@ -1463,6 +1540,7 @@ def generate_ai_study_plan():
             daily_hours=daily_hours,
             target_date=target,
         )
+
         db.session.add(saved_plan)
         db.session.commit()
 
@@ -1476,45 +1554,15 @@ def generate_ai_study_plan():
             "daily_hours": daily_hours,
             "created_at": saved_plan.created_at.isoformat() + "Z",
         }), 201
+
     except SQLAlchemyError:
         db.session.rollback()
         app.logger.exception("Saving AI study plan failed")
         return error_response(
-            "The plan was generated but could not be saved to the database.", 500
-        )
-    except Exception:
-        db.session.rollback()
-        app.logger.exception("Gemini study plan generation failed")
-        return error_response(
-            "Gemini could not generate a study plan right now. Please try again shortly.",
-            502,
+            "The plan was generated but could not be saved to the database.",
+            500,
         )
 
-
-@app.route("/api/ai/study-plans", methods=["GET"])
-@jwt_required()
-def get_saved_ai_study_plans():
-    """List saved plans belonging only to the authenticated user."""
-    plans = (
-        AIStudyPlan.query.filter_by(user_id=get_current_user_id())
-        .order_by(AIStudyPlan.created_at.desc(), AIStudyPlan.id.desc())
-        .all()
-    )
-    return jsonify({
-        "study_plans": [
-            {
-                "id": item.id,
-                "title": item.title,
-                "subjects": item.subjects.split(", ") if item.subjects else [],
-                "plan": item.plan,
-                "priority": item.priority,
-                "daily_hours": item.daily_hours,
-                "target_date": item.target_date.isoformat(),
-                "created_at": item.created_at.isoformat() + "Z",
-            }
-            for item in plans
-        ]
-    })
 
 
 # --------------------------------------------------
