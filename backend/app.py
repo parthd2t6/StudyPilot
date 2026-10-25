@@ -39,18 +39,17 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=12)
 frontend_url = os.getenv(
     "FRONTEND_URL",
     "https://studypilottt.netlify.app"
-).rstrip("/")
-
-allowed_origins = [
-    frontend_url,
-    "https://studypilottt.netlify.app",
-]
+).strip().rstrip("/")
 
 CORS(
     app,
-    resources={r"/api/*": {"origins": allowed_origins}},
-    allow_headers=["Content-Type", "Authorization"],
-    methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    resources={
+        r"/api/*": {
+            "origins": [frontend_url],
+            "allow_headers": ["Content-Type", "Authorization"],
+            "methods": ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+        }
+    },
 )
 
 
