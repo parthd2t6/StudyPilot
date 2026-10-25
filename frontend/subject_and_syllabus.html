@@ -377,24 +377,41 @@ function showSubjectsView() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+
 async function toggleTopic(chapterId, topicId, isCompleted) {
   const topic = findTopic(chapterId, topicId);
-  if (!topic) return;
+
+  if (!topic) {
+    showError("Could not find this topic. Please refresh the page.");
+    return;
+  }
+
   const previous = topic.completed;
+
+  // Update the checkbox and progress immediately.
   topic.completed = isCompleted;
   renderChapters();
+  renderSubjectsGrid();
+
   try {
+    // Save the new completion status in the database.
     await apiRequest(`/api/topics/${topicId}`, {
       method: "PATCH",
       body: JSON.stringify({ completed: isCompleted })
     });
-    await loadSubjectsFromDatabase();
   } catch (error) {
+    // Revert the UI only if saving actually failed.
     topic.completed = previous;
     renderChapters();
-    showError(error.message);
+    renderSubjectsGrid();
+    showError(`Could not save topic completion: ${error.message}`);
+    return;
   }
+
+  // Reload saved data to confirm the database state.
+  await loadSubjectsFromDatabase();
 }
+
 
 function findTopic(chapterId, topicId) {
   const subject = syllabusData.find(item => item.id === String(currentSubjectId));
